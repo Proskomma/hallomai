@@ -1,11 +1,9 @@
-use crate::model;
+use serde::Deserialize;
+// use crate::model::{DataType, DataTypeTraits};
 
-pub trait Root {
-    fn print_version(&self);
-}
-
-impl Root for model::Root{
-    fn print_version(&self) {
-        println!("{}", self.version)
-    }
+#[derive(Debug, Deserialize)]
+pub struct USJ {
+    pub(crate) r#type: String,
+    pub(crate) version: String,
+    pub(crate) content: String,
 }

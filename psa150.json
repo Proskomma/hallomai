@@ -6,56 +6,56 @@
       "code": "PSA",
       "marker": "id",
       "content": [
-        ",World English Bible British Edition (WEBBE) abbreviated by Mark,"
+        "World English Bible British Edition (WEBBE) abbreviated by Mark"
       ]
     },
     {
       "type": "para",
       "marker": "ide",
       "content": [
-        ",UTF-8,"
+        "UTF-8"
       ]
     },
     {
       "type": "para",
       "marker": "h",
       "content": [
-        ",Psalms,"
+        "Psalms"
       ]
     },
     {
       "type": "para",
       "marker": "toc1",
       "content": [
-        ",The Psalms,"
+        "The Psalms"
       ]
     },
     {
       "type": "para",
       "marker": "toc2",
       "content": [
-        ",Psalms,"
+        "Psalms"
       ]
     },
     {
       "type": "para",
       "marker": "toc3",
       "content": [
-        ",Psalm,"
+        "Psalm"
       ]
     },
     {
       "type": "para",
       "marker": "mt1",
       "content": [
-        ",The Psalms,"
+        "The Psalms"
       ]
     },
     {
       "type": "para",
       "marker": "cl",
       "content": [
-        ",Psalm,"
+        "Psalm"
       ]
     },
     {
@@ -72,21 +72,21 @@
           "marker": "v",
           "number": "1"
         },
-        ",Praise the LORD!,"
+        "Praise the LORD!"
       ]
     },
     {
       "type": "para",
       "marker": "q2",
       "content": [
-        ",Praise God in his sanctuary!,"
+        "Praise God in his sanctuary!"
       ]
     },
     {
       "type": "para",
       "marker": "q2",
       "content": [
-        ",Praise him in his heavens for his acts of power!,"
+        "Praise him in his heavens for his acts of power!"
       ]
     },
     {
@@ -98,14 +98,14 @@
           "marker": "v",
           "number": "2"
         },
-        ",Praise him for his mighty acts!,"
+        "Praise him for his mighty acts!"
       ]
     },
     {
       "type": "para",
       "marker": "q2",
       "content": [
-        ",Praise him according to his excellent greatness!,"
+        "Praise him according to his excellent greatness!"
       ]
     },
     {
@@ -117,15 +117,33 @@
           "marker": "v",
           "number": "3"
         },
-        ",Praise him with the sounding of the trumpet!,",
-        ",Selah.,"
+        "Praise him with the sounding of the trumpet!",
+        {
+          "type": "char",
+          "marker": "qs",
+          "content": [
+            {
+              "type": "char",
+              "marker": "sc",
+              "content": [
+                {
+                  "type": "char",
+                  "marker": "qs",
+                  "content": [
+                    "Selah."
+                  ]
+                }
+              ]
+            }
+          ]
+        }
       ]
     },
     {
       "type": "para",
       "marker": "q2",
       "content": [
-        ",Praise him with harp and lyre!,"
+        "Praise him with harp and lyre!"
       ]
     },
     {
@@ -137,14 +155,14 @@
           "marker": "v",
           "number": "4"
         },
-        ",Praise him with tambourine and dancing!,"
+        "Praise him with tambourine and dancing!"
       ]
     },
     {
       "type": "para",
       "marker": "q2",
       "content": [
-        ",Praise him with stringed instruments and flute!,"
+        "Praise him with stringed instruments and flute!"
       ]
     },
     {
@@ -156,14 +174,14 @@
           "marker": "v",
           "number": "5"
         },
-        ",Praise him with loud cymbals!,"
+        "Praise him with loud cymbals!"
       ]
     },
     {
       "type": "para",
       "marker": "q2",
       "content": [
-        ",Praise him with resounding cymbals!,"
+        "Praise him with resounding cymbals!"
       ]
     },
     {
@@ -175,14 +193,14 @@
           "marker": "v",
           "number": "6"
         },
-        ",Let everything that has breath praise the LORD!,"
+        "Let everything that has breath praise the LORD!"
       ]
     },
     {
       "type": "para",
       "marker": "q2",
       "content": [
-        ",Praise the LORD!,"
+        "Praise the LORD!"
       ]
     }
   ]

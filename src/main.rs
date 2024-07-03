@@ -46,6 +46,25 @@ fn push_element(el: BytesStart, mut parent_els: Vec<Element>) -> Vec<Element> {
 }
 
 
+
+fn get_attributes(parent_els: &mut Vec<Element>) -> String {
+    let mut attributes = Vec::new();
+    if let Some(element) = parent_els.last() {
+        for (key, value) in &element.attributes {
+            if key != "sid" && key != "vid" && key != "eid" {
+                let mut good_key = key.to_string();
+                if key == "style" {
+                    good_key = "marker".to_string();
+                }
+                attributes.push(format!("\"{}\": \"{}\", ", good_key, value));
+            }
+        }
+    }
+    attributes.join("")
+}
+
+
+
 fn add_root_metadata(mut root_attributes: BTreeMap<String, String>, version_value: &String) -> BTreeMap<String, String> {
     // root_attributes.insert("type".to_string(), "USJ".to_string());
     root_attributes.insert("version".to_string(), version_value.to_string());
@@ -55,8 +74,8 @@ fn add_root_metadata(mut root_attributes: BTreeMap<String, String>, version_valu
     root_attributes
 }
 
-fn start_book(current_para: &mut String, code: String){
-    current_para.push_str(&format!("{{ \"type\": \"book\", \"code\": \"{}\", \"marker\": \"id\",", code));
+fn start_book(current_para: &mut String, attributes: String){
+    current_para.push_str(&format!("{{ \"type\": \"book\", {}", attributes));
 }
 
 fn end_book(paras: &mut Vec<String>, current_para: &mut String, current_in_para: &mut Vec<String>) {
@@ -68,8 +87,8 @@ fn end_book(paras: &mut Vec<String>, current_para: &mut String, current_in_para:
 }
 
 
-fn start_new_para(current_para: &mut String, style: String) {
-    current_para.push_str(&format!("{{ \"type\": \"para\", \"marker\": \"{}\", ", style));
+fn start_new_para(current_para: &mut String, attributes: String) {
+    current_para.push_str(&format!("{{ \"type\": \"para\",{}", attributes));
 }
 
 fn end_new_para(paras: &mut Vec<String>, current_para: &mut String, current_in_para: &mut Vec<String>) {
@@ -90,36 +109,55 @@ fn add_string_to_in_para(current_in_para: &mut Vec<String>, txt: &mut Vec<String
     }
 }
 
-fn add_chapter(paras: &mut Vec<String>, number: String) {
-    paras.push(format!("{{ \"type\": \"chapter\", \"marker\": \"c\", \"number\": \"{}\"}}", number).to_string());
+fn add_chapter(paras: &mut Vec<String>, attributes: String) {
+    paras.push(format!("{{ \"type\": \"chapter\", {} }}", attributes).to_string());
 }
 
-fn add_verse_to_in_para(current_in_para: &mut Vec<String>, number: String) {
-    current_in_para.push(format!("{{ \"type\": \"verse\", \"marker\": \"v\", \"number\": \"{}\",}}", number).to_string());
+fn add_verse_to_in_para(current_in_para: &mut Vec<String>, attributes: String) {
+    current_in_para.push(format!("{{ \"type\": \"verse\", {}}}", attributes).to_string());
 }
 
 
+fn add_milestone(current_in_para: &mut Vec<String>, attributes: String) {
+    current_in_para.push(format!("{{ \"type\": \"ms\", {} }}", attributes).to_string())
+}
 
 
-fn start_add_char_marker(char_marker_stack: &mut Vec<String>, style: String) {
-    char_marker_stack.push(format!("{{ \"type\": \"char\", \"marker\": \"{}\", \"content\": [", style).to_string());
+fn start_add_char_marker(char_marker_stack: &mut Vec<String>, attributes: String) {
+    char_marker_stack.push(format!("{{ \"type\": \"char\", {} \"content\": [", attributes).to_string());
 }
 
 fn end_add_char_marker(current_in_para: &mut Vec<String>, char_marker_stack: &mut Vec<String>, txt: &mut Vec<String>) {
     if !txt.is_empty() {
-        char_marker_stack.push(format!("\"{}\"] }}", txt.join("")));
-        txt.clear();
+        char_marker_stack.push(format!("\"{}\"] }}", txt.join(" ")));
 
+        txt.clear();
     } else if !current_in_para.is_empty() {
         char_marker_stack.push(format!("{}] }}",current_in_para.pop().unwrap()));
     }
-    current_in_para.push(char_marker_stack.join(""));
+    current_in_para.push(char_marker_stack.join(" "));
 
     char_marker_stack.clear();
 }
 
 
 
+fn start_add_note(note_stack: &mut Vec<String>, attributes: String) {
+    note_stack.push(format!("{{ \"type\": \"note\", {} \"content\": [", attributes).to_string());
+}
+
+fn end_add_note(current_in_para: &mut Vec<String>, note_stack: &mut Vec<String>, txt: &mut Vec<String>) {
+    if !txt.is_empty() {
+        note_stack.push(format!("\"{}\"] }}", txt.join("")));
+        txt.clear();
+
+    } else if !current_in_para.is_empty() {
+        note_stack.push(format!("{}] }}",current_in_para.pop().unwrap()));
+    }
+    current_in_para.push(note_stack.join(""));
+
+    note_stack.clear();
+}
 
 
 
@@ -137,6 +175,7 @@ fn assemble_model(root_attributes: BTreeMap<String, String>, paras: Vec<String>)
 fn main() {
     let mut paras: Vec<String> = vec![];
     let mut char_marker_stack: Vec<String> = vec![];
+    let mut note_stack: Vec<String> = vec![];
     let mut root_attributes: BTreeMap<String, String> = BTreeMap::new();
     let mut current_para= String::new();
     let mut current_in_para: Vec<String> = vec![];
@@ -172,20 +211,26 @@ fn main() {
                 } else if tag_name == "para" {
                     start_new_para(
                         &mut current_para,
-                        parent_els.last().unwrap().attributes.get("style").unwrap().to_string()
+                        get_attributes(&mut parent_els)
                     );
 
                 } else if tag_name == "book" {
                     start_book(
                         &mut current_para,
-                        parent_els.last().unwrap().attributes.get("code").unwrap().to_string()
+                        get_attributes(&mut parent_els)
                     )
                 } else if tag_name == "char" {
                     start_add_char_marker(
                         &mut char_marker_stack,
-                        parent_els.last().unwrap().attributes.get("style").unwrap().to_string()
+                        get_attributes(&mut parent_els)
+                    )
+                } else if tag_name == "note" {
+                    start_add_note(
+                        &mut note_stack,
+                        get_attributes(&mut parent_els)
                     )
                 }
+                // println!("{:?}", get_attributes(&mut parent_els));
             }
 
             Ok(Event::Empty(el)) => {
@@ -197,14 +242,21 @@ fn main() {
                 if tag_name == "verse" && !parent_els.last().unwrap().attributes.contains_key("eid") {
                     add_verse_to_in_para(
                         &mut current_in_para,
-                        parent_els.last().unwrap().attributes.get("number").unwrap().to_string()
+                        get_attributes(&mut parent_els)
                     );
                 } else if tag_name == "chapter" && !parent_els.last().unwrap().attributes.contains_key("eid") {
                     add_chapter(
                         &mut paras,
-                        parent_els.last().unwrap().attributes.get("number").unwrap().to_string()
+                        get_attributes(&mut parent_els)
                     );
-                };
+                } else if tag_name == "ms" && !parent_els.last().unwrap().attributes.contains_key("eid") {
+                    add_milestone(
+                        &mut current_in_para,
+                        get_attributes(&mut parent_els)
+                    )
+                }
+                // println!("{:?}", get_attributes(&mut parent_els));
+
 
                 parent_els.pop();
             }
@@ -245,6 +297,12 @@ fn main() {
                     end_add_char_marker(
                         &mut current_in_para,
                         &mut char_marker_stack,
+                        &mut txt
+                    )
+                } else if tag_name == "note" {
+                    end_add_note(
+                        &mut current_in_para,
+                        &mut note_stack,
                         &mut txt
                     )
                 }

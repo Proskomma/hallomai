@@ -60,8 +60,8 @@
     },
     {
       "type": "chapter",
-      "marker": "c",
-      "number": "150"
+      "number": "150",
+      "marker": "c"
     },
     {
       "type": "para",
@@ -69,8 +69,8 @@
       "content": [
         {
           "type": "verse",
-          "marker": "v",
-          "number": "1"
+          "number": "1",
+          "marker": "v"
         },
         "Praise the LORD!"
       ]
@@ -95,8 +95,8 @@
       "content": [
         {
           "type": "verse",
-          "marker": "v",
-          "number": "2"
+          "number": "2",
+          "marker": "v"
         },
         "Praise him for his mighty acts!"
       ]
@@ -114,25 +114,36 @@
       "content": [
         {
           "type": "verse",
-          "marker": "v",
-          "number": "3"
+          "number": "3",
+          "marker": "v"
         },
         "Praise him with the sounding of the trumpet!",
         {
           "type": "char",
           "marker": "qs",
           "content": [
+            "Selah."
+          ]
+        },
+        {
+          "type": "char",
+          "closed": "false",
+          "marker": "fr",
+          "content": [
+            "1:2"
+          ]
+        },
+        {
+          "type": "note",
+          "caller": "+",
+          "marker": "f",
+          "content": [
             {
               "type": "char",
-              "marker": "sc",
+              "closed": "false",
+              "marker": "ft",
               "content": [
-                {
-                  "type": "char",
-                  "marker": "qs",
-                  "content": [
-                    "Selah."
-                  ]
-                }
+                "Note."
               ]
             }
           ]
@@ -152,8 +163,8 @@
       "content": [
         {
           "type": "verse",
-          "marker": "v",
-          "number": "4"
+          "number": "4",
+          "marker": "v"
         },
         "Praise him with tambourine and dancing!"
       ]
@@ -171,8 +182,8 @@
       "content": [
         {
           "type": "verse",
-          "marker": "v",
-          "number": "5"
+          "number": "5",
+          "marker": "v"
         },
         "Praise him with loud cymbals!"
       ]
@@ -190,8 +201,8 @@
       "content": [
         {
           "type": "verse",
-          "marker": "v",
-          "number": "6"
+          "number": "6",
+          "marker": "v"
         },
         "Let everything that has breath praise the LORD!"
       ]

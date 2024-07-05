@@ -1,7 +1,9 @@
+#![allow(dead_code)]
 use std::collections::BTreeMap;
 use std::fmt;
 use std::fmt::{Debug, Display, Formatter};
 
+#[derive(Clone)]
 pub struct Element {
     pub tag_name: String,
     pub attributes: BTreeMap<String, String>,

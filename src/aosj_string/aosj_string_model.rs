@@ -1,6 +1,8 @@
+#![allow(dead_code)]
 use std::collections::BTreeMap;
 use quick_xml::events::BytesStart;
 use crate::aosj_string::element::Element;
+use crate::model_traits::AosjModel;
 
 pub struct AosjStringModel {
     pub root_attributes: BTreeMap<String, String>,
@@ -12,9 +14,9 @@ pub struct AosjStringModel {
     pub parent_els: Vec<Element>
 }
 
-impl AosjStringModel {
+impl AosjModel for AosjStringModel {
 
-    pub fn new() -> Self {
+    fn new() -> Self {
         AosjStringModel {
             root_attributes: BTreeMap::new(),
             paras: Vec::new(),
@@ -26,9 +28,7 @@ impl AosjStringModel {
         }
     }
 
-
-
-    pub fn push_element(&mut self, el: BytesStart) {
+    fn push_element(&mut self, el: BytesStart) {
         let mut attributes: BTreeMap<String, String> = BTreeMap::new();
         for att in el.attributes() {
             attributes.insert(
@@ -44,7 +44,7 @@ impl AosjStringModel {
 
 
 
-    pub fn get_attributes(&self) -> String {
+    fn get_attributes(&self) -> String {
         let mut attributes = Vec::new();
         if let Some(element) = self.parent_els.last() {
             for (key, value) in &element.attributes {
@@ -62,22 +62,22 @@ impl AosjStringModel {
 
 
 
-    pub fn add_root_metadata(&mut self, version_value: &String) {
+    fn add_root_metadata(&mut self, version_value: &String) {
         self.root_attributes.insert("version".to_string(), version_value.to_string());
     }
 
-    pub fn start_book(&mut self, attributes: String){
+    fn start_book(&mut self, attributes: String){
         self.stack_in_paras.push(vec![format!("{{ \"type\": \"book\", {}, \"content\": [", attributes)]);
     }
 
-    pub fn end_book(&mut self) {
+    fn end_book(&mut self) {
         let mut last = self.stack_in_paras.pop().unwrap();
-        let mut lastOfLast = last.pop().unwrap();
-        let mut ultimate = lastOfLast.pop().unwrap().to_string();
+        let mut last_of_last = last.pop().unwrap();
+        let ultimate = last_of_last.pop().unwrap().to_string();
         if ultimate != "," {
-            lastOfLast.push_str(ultimate.as_str());
+            last_of_last.push_str(ultimate.as_str());
         }
-        last.push(lastOfLast);
+        last.push(last_of_last);
         last.push(format!(" ] }}").to_string());
         self.stack_in_paras.push(last);
 
@@ -85,18 +85,18 @@ impl AosjStringModel {
         self.stack_in_paras.clear();
     }
 
-    pub fn start_new_para(&mut self, attributes: String) {
+    fn start_new_para(&mut self, attributes: String) {
         self.stack_in_paras.push(vec![format!("{{ \"type\": \"para\",{}, \"content\": [ ", attributes)]);
     }
 
-    pub fn end_new_para(&mut self) {
+    fn end_new_para(&mut self) {
         let mut last = self.stack_in_paras.pop().unwrap();
-        let mut lastOfLast = last.pop().unwrap();
-        let mut ultimate = lastOfLast.pop().unwrap().to_string();
+        let mut last_of_last = last.pop().unwrap();
+        let ultimate = last_of_last.pop().unwrap().to_string();
         if ultimate != "," {
-            lastOfLast.push_str(ultimate.as_str());
+            last_of_last.push_str(ultimate.as_str());
         }
-        last.push(lastOfLast);
+        last.push(last_of_last);
         last.push(format!(" ] }}").to_string());
         self.stack_in_paras.push(last);
 
@@ -104,7 +104,7 @@ impl AosjStringModel {
         self.stack_in_paras.clear();
     }
 
-    pub fn add_string_to_in_para(&mut self, txt: &mut Vec<String>) {
+    fn add_string_to_in_para(&mut self, txt: &mut Vec<String>) {
         if txt.len() !=0 {
 
             let mut last = self.stack_in_paras.pop().unwrap();
@@ -116,31 +116,31 @@ impl AosjStringModel {
         }
     }
 
-    pub fn add_chapter(&mut self, attributes: String) {
+    fn add_chapter(&mut self, attributes: String) {
         self.paras.push(format!("{{ \"type\": \"chapter\", {} }}", attributes).to_string());
     }
 
-    pub fn add_verse_to_in_para(&mut self, attributes: String) {
+    fn add_verse_to_in_para(&mut self, attributes: String) {
         let mut last = self.stack_in_paras.pop().unwrap();
         last.push(format!("{{ \"type\": \"verse\", {} }},", attributes).to_string());
         self.stack_in_paras.push(last);
 
     }
 
-    pub fn add_milestone(&mut self, attributes: String) {
+    fn add_milestone(&mut self, attributes: String) {
         let mut last = self.stack_in_paras.pop().unwrap();
         last.push(format!("{{ \"type\": \"ms\", {} }},", attributes).to_string());
         self.stack_in_paras.push(last);
 
     }
 
-    pub fn start_add_char_marker(&mut self, attributes: String) {
+    fn start_add_char_marker(&mut self, attributes: String) {
         let mut current_char:Vec<String> = Vec::new();
         current_char.push(format!("{{ \"type\": \"char\", {}, \"content\": [", attributes).to_string());
         self.stack_in_paras.push(current_char);
     }
 
-    pub fn end_add_char_marker(&mut self, txt: &mut Vec<String>) {
+    fn end_add_char_marker(&mut self, txt: &mut Vec<String>) {
         if !txt.is_empty() {
             let mut last = self.stack_in_paras.pop().unwrap();
             last.push(format!("\"{}\"", txt.join("")));
@@ -150,12 +150,12 @@ impl AosjStringModel {
 
         }
         let mut last = self.stack_in_paras.pop().unwrap();
-        let mut lastOfLast = last.pop().unwrap();
-        let mut ultimate = lastOfLast.pop().unwrap().to_string();
+        let mut last_of_last = last.pop().unwrap();
+        let ultimate = last_of_last.pop().unwrap().to_string();
         if ultimate != "," {
-            lastOfLast.push_str(ultimate.as_str());
+            last_of_last.push_str(ultimate.as_str());
         }
-        last.push(lastOfLast);
+        last.push(last_of_last);
         last.push(format!(" ] }},").to_string());
         self.stack_in_paras.push(last);
 
@@ -168,11 +168,11 @@ impl AosjStringModel {
         }
     }
 
-    pub fn start_add_note(&mut self, attributes: String) {
+    fn start_add_note(&mut self, attributes: String) {
         self.stack_in_paras.push(vec![format!("{{ \"type\": \"note\", {}, \"content\": [", attributes).to_string()]);
     }
 
-    pub fn end_add_note(&mut self, txt: &mut Vec<String>) {
+    fn end_add_note(&mut self, txt: &mut Vec<String>) {
         if !txt.is_empty() {
             let mut last = self.stack_in_paras.pop().unwrap();
             last.push(format!("\"{}\"", txt.join("")));
@@ -182,12 +182,12 @@ impl AosjStringModel {
 
         }
         let mut last = self.stack_in_paras.pop().unwrap();
-        let mut lastOfLast = last.pop().unwrap();
-        let mut ultimate = lastOfLast.pop().unwrap().to_string();
+        let mut last_of_last = last.pop().unwrap();
+        let ultimate = last_of_last.pop().unwrap().to_string();
         if ultimate != "," {
-            lastOfLast.push_str(ultimate.as_str());
+            last_of_last.push_str(ultimate.as_str());
         }
-        last.push(lastOfLast);
+        last.push(last_of_last);
         last.push(format!(" ] }},").to_string());
         self.stack_in_paras.push(last);
 
@@ -202,7 +202,7 @@ impl AosjStringModel {
 
 
 
-    pub fn assemble_model(&self) -> String {
+    fn assemble_model(&self) -> String {
         let mut model = "".to_string();
         model += "{";
         model += &format!(" \"version\": \"{}\",", self.root_attributes.get("version").unwrap().to_string());
@@ -211,4 +211,10 @@ impl AosjStringModel {
         model += "}";
         model
     }
+
+
+    fn parent_els(&mut self) -> &mut Vec<Element> {
+        &mut self.parent_els
+    }
+
 }

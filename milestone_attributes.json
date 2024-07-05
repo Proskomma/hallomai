@@ -33,15 +33,10 @@
       "marker": "p",
       "content": [
         {
-          "type": "ms",
-          "marker": "ts"
-        },
-        {
           "type": "verse",
           "number": "1",
           "marker": "v"
         },
-        "The vision of",
         {
           "type": "ms",
           "marker": "zaln-s",

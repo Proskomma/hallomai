@@ -27,9 +27,7 @@
         <char style="qs">Selah.</char>
         <note caller="+" style="f">
             <char style="fr" closed="false">1:2</char>
-            <char style="ft" closed="false">
-                Note.
-            </char>
+            <char style="ft" closed="false">Note.</char>
         </note>
     </para>
     <para style="q2" vid="PSA 150:3">Praise him with harp and lyre!

@@ -1,189 +1,21 @@
 mod model;
 mod deserialize_usx;
 mod model_traits;
+mod aosj_string;
+use aosj_string::aosj_string_model::AosjStringModel;
 
-// use std::any::Any;
-// use std::cmp::PartialEq;
-use std::collections::BTreeMap;
-use std::fmt;
-use std::fmt::{Debug, Display, Formatter};
-// use std::io::Read;
-use quick_xml::events::{BytesStart, Event};
+
+use std::fmt::{Debug, Display};
+use quick_xml::events::Event;
 use quick_xml::reader::Reader;
 
 
-struct Element {
-    tag_name: String,
-    attributes: BTreeMap<String, String>,
-}
-
-impl Display for Element {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        write!(f, "ELEMENT<{}>, {:#?}", self.tag_name, self.attributes)
-    }
-}
-
-impl Debug for Element {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        write!(f, "ELEMENT<{}>, {:#?}", self.tag_name, self.attributes)
-    }
-}
-
-
-fn push_element(el: BytesStart, mut parent_els: Vec<Element>) -> Vec<Element> {
-    let mut attributes: BTreeMap<String, String> = BTreeMap::new();
-    for att in el.attributes() {
-        attributes.insert(
-            String::from_utf8(att.clone().unwrap().key.local_name().as_ref().to_vec()).unwrap(),
-            String::from_utf8(att.clone().unwrap().value.as_ref().to_vec()).unwrap());
-    }
-
-    parent_els.push(Element {
-        tag_name: String::from_utf8(el.name().as_ref().to_vec()).unwrap(),
-        attributes,
-    });
-    parent_els
-}
-
-
-
-fn get_attributes(parent_els: &mut Vec<Element>) -> String {
-    let mut attributes = Vec::new();
-    if let Some(element) = parent_els.last() {
-        for (key, value) in &element.attributes {
-            if key != "sid" && key != "vid" && key != "eid" {
-                let mut good_key = key.to_string();
-                if key == "style" {
-                    good_key = "marker".to_string();
-                }
-                attributes.push(format!("\"{}\": \"{}\", ", good_key, value));
-            }
-        }
-    }
-    attributes.join("")
-}
-
-
-
-fn add_root_metadata(mut root_attributes: BTreeMap<String, String>, version_value: &String) -> BTreeMap<String, String> {
-    // root_attributes.insert("type".to_string(), "USJ".to_string());
-    root_attributes.insert("version".to_string(), version_value.to_string());
-    // println!("1 : {}", root_attributes.get("version").unwrap());
-    // println!("2 : {}", root_attributes.get("version").unwrap());
-
-    root_attributes
-}
-
-fn start_book(current_para: &mut String, attributes: String){
-    current_para.push_str(&format!("{{ \"type\": \"book\", {}", attributes));
-}
-
-fn end_book(paras: &mut Vec<String>, current_para: &mut String, current_in_para: &mut Vec<String>) {
-    current_para.push_str(&format!(" \"content\": [{}] }}",current_in_para.join(" ")));
-
-    paras.push(current_para.clone());
-    current_in_para.clear();
-    current_para.clear();
-}
-
-
-fn start_new_para(current_para: &mut String, attributes: String) {
-    current_para.push_str(&format!("{{ \"type\": \"para\",{}", attributes));
-}
-
-fn end_new_para(paras: &mut Vec<String>, current_para: &mut String, current_in_para: &mut Vec<String>) {
-
-    current_para.push_str(&format!(" \"content\": [{}] }}",current_in_para.join(",")));
-
-    paras.push(current_para.clone());
-    current_in_para.clear();
-    current_para.clear();
-
-}
-
-fn add_string_to_in_para(current_in_para: &mut Vec<String>, txt: &mut Vec<String>) {
-    if txt.len() !=0 {
-        current_in_para.push(format!("\"{}\"", txt.join("")));
-
-        txt.clear();
-    }
-}
-
-fn add_chapter(paras: &mut Vec<String>, attributes: String) {
-    paras.push(format!("{{ \"type\": \"chapter\", {} }}", attributes).to_string());
-}
-
-fn add_verse_to_in_para(current_in_para: &mut Vec<String>, attributes: String) {
-    current_in_para.push(format!("{{ \"type\": \"verse\", {}}}", attributes).to_string());
-}
-
-
-fn add_milestone(current_in_para: &mut Vec<String>, attributes: String) {
-    current_in_para.push(format!("{{ \"type\": \"ms\", {} }}", attributes).to_string())
-}
-
-
-fn start_add_char_marker(char_marker_stack: &mut Vec<String>, attributes: String) {
-    char_marker_stack.push(format!("{{ \"type\": \"char\", {} \"content\": [", attributes).to_string());
-}
-
-fn end_add_char_marker(current_in_para: &mut Vec<String>, char_marker_stack: &mut Vec<String>, txt: &mut Vec<String>) {
-    if !txt.is_empty() {
-        char_marker_stack.push(format!("\"{}\"] }}", txt.join(" ")));
-
-        txt.clear();
-    } else if !current_in_para.is_empty() {
-        char_marker_stack.push(format!("{}] }}",current_in_para.pop().unwrap()));
-    }
-    current_in_para.push(char_marker_stack.join(" "));
-
-    char_marker_stack.clear();
-}
-
-
-
-fn start_add_note(note_stack: &mut Vec<String>, attributes: String) {
-    note_stack.push(format!("{{ \"type\": \"note\", {} \"content\": [", attributes).to_string());
-}
-
-fn end_add_note(current_in_para: &mut Vec<String>, note_stack: &mut Vec<String>, txt: &mut Vec<String>) {
-    if !txt.is_empty() {
-        note_stack.push(format!("\"{}\"] }}", txt.join("")));
-        txt.clear();
-
-    } else if !current_in_para.is_empty() {
-        note_stack.push(format!("{}] }}",current_in_para.pop().unwrap()));
-    }
-    current_in_para.push(note_stack.join(""));
-
-    note_stack.clear();
-}
-
-
-
-fn assemble_model(root_attributes: BTreeMap<String, String>, paras: Vec<String>) -> String {
-    let mut model = "".to_string();
-    model += "{";
-    model += &format!(" \"version\": \"{}\",", root_attributes.get("version").unwrap().to_string());
-    model += &format!(" \"content\": [{}]", paras.join(","));
-
-    model += "}";
-    model
-}
-
 
 fn main() {
-    let mut paras: Vec<String> = vec![];
-    let mut char_marker_stack: Vec<String> = vec![];
-    let mut note_stack: Vec<String> = vec![];
-    let mut root_attributes: BTreeMap<String, String> = BTreeMap::new();
-    let mut current_para= String::new();
-    let mut current_in_para: Vec<String> = vec![];
 
     // let mut metadata: BTreeMap<String, String> = BTreeMap::new();
-    let mut parent_els: Vec<Element> = vec![];
 
-    let input_file_path = "./assets/web_psa150.usx";
+    let input_file_path = "./assets/milestone_attributes.usx";
 
     let mut reader = Reader::from_file(input_file_path).unwrap();
     reader.config_mut().trim_text(true);
@@ -191,127 +23,97 @@ fn main() {
     let mut buf = Vec::new();
     let mut txt = Vec::new();
 
+    let mut model = AosjStringModel::new();
+
     loop {
         match reader.read_event_into(&mut buf) {
             Ok(Event::Start(el)) => {
-                add_string_to_in_para(
-                    &mut current_in_para,
+                model.add_string_to_in_para(
                     &mut txt
                 );
-                parent_els = push_element(el, parent_els);
-                // println!("{:#?}", parent_els.last());
+                model.push_element(el);
 
-                let tag_name = parent_els.last().unwrap().tag_name.clone();
+                let tag_name = model.parent_els.last().unwrap().tag_name.clone();
                 if tag_name == "usx" {
-                    // println!("{:#?}", parent_els.last().unwrap().attributes.get("version").unwrap().clone());
-                    root_attributes = add_root_metadata(
-                        root_attributes,
-                        parent_els.last().unwrap().attributes.get("version").unwrap(),
+                    model.add_root_metadata(
+                        &model.parent_els.last().unwrap().attributes.get("version").unwrap().to_string(),
                     );
                 } else if tag_name == "para" {
-                    start_new_para(
-                        &mut current_para,
-                        get_attributes(&mut parent_els)
+                    model.start_new_para(
+                        model.get_attributes()
                     );
 
                 } else if tag_name == "book" {
-                    start_book(
-                        &mut current_para,
-                        get_attributes(&mut parent_els)
+                    model.start_book(
+                        model.get_attributes()
                     )
                 } else if tag_name == "char" {
-                    start_add_char_marker(
-                        &mut char_marker_stack,
-                        get_attributes(&mut parent_els)
+                    model.start_add_char_marker(
+                        model.get_attributes()
                     )
                 } else if tag_name == "note" {
-                    start_add_note(
-                        &mut note_stack,
-                        get_attributes(&mut parent_els)
+                    model.start_add_note(
+                        model.get_attributes()
                     )
                 }
-                // println!("{:?}", get_attributes(&mut parent_els));
             }
 
             Ok(Event::Empty(el)) => {
-                add_string_to_in_para(&mut current_in_para, &mut txt);
-                parent_els = push_element(el, parent_els);
-                // println!("{:#?}", parent_els.last());
-                let tag_name = parent_els.last().unwrap().tag_name.clone();
+                model.add_string_to_in_para(&mut txt);
+                model.push_element(el);
+                let tag_name = model.parent_els.last().unwrap().tag_name.clone();
 
-                if tag_name == "verse" && !parent_els.last().unwrap().attributes.contains_key("eid") {
-                    add_verse_to_in_para(
-                        &mut current_in_para,
-                        get_attributes(&mut parent_els)
+                if tag_name == "verse" && !model.parent_els.last().unwrap().attributes.contains_key("eid") {
+                    model.add_verse_to_in_para(
+                        model.get_attributes()
                     );
-                } else if tag_name == "chapter" && !parent_els.last().unwrap().attributes.contains_key("eid") {
-                    add_chapter(
-                        &mut paras,
-                        get_attributes(&mut parent_els)
+                } else if tag_name == "chapter" && !model.parent_els.last().unwrap().attributes.contains_key("eid") {
+                    model.add_chapter(
+                        model.get_attributes()
                     );
-                } else if tag_name == "ms" && !parent_els.last().unwrap().attributes.contains_key("eid") {
-                    add_milestone(
-                        &mut current_in_para,
-                        get_attributes(&mut parent_els)
+                } else if tag_name == "ms" && !model.parent_els.last().unwrap().attributes.contains_key("eid") {
+                    model.add_milestone(
+                        model.get_attributes()
                     )
                 }
-                // println!("{:?}", get_attributes(&mut parent_els));
 
-
-                parent_els.pop();
+                model.parent_els.pop();
             }
 
             Ok(Event::Text(el)) => {
-                // txt.pop();
-                if parent_els.len()>1 {
+                if model.parent_els.len()>1 {
                     txt.push(el.unescape().unwrap().into_owned());
                 }
-                // println!("{:#?}", txt.last());
             }
 
             Ok(Event::End(..)) => {
 
-                let tag_name = parent_els.last().unwrap().tag_name.clone();
+                let tag_name = model.parent_els.last().unwrap().tag_name.clone();
 
                 if tag_name == "para" {
-                    add_string_to_in_para(
-                        &mut current_in_para,
+                    model.add_string_to_in_para(
                         &mut txt
                     );
-                    end_new_para(
-                        &mut paras,
-                        &mut current_para,
-                        &mut current_in_para
-                    )
+                    model.end_new_para()
                 } else if tag_name == "book" {
-                    add_string_to_in_para(
-                        &mut current_in_para,
+                    model.add_string_to_in_para(
                         &mut txt
                     );
-                    end_book(
-                        &mut paras,
-                        &mut current_para,
-                        &mut current_in_para
-                    )
+                    model.end_book()
                 } else if tag_name == "char" {
-                    end_add_char_marker(
-                        &mut current_in_para,
-                        &mut char_marker_stack,
+                    model.end_add_char_marker(
                         &mut txt
                     )
                 } else if tag_name == "note" {
-                    end_add_note(
-                        &mut current_in_para,
-                        &mut note_stack,
+                    model.end_add_note(
                         &mut txt
                     )
                 }
-                parent_els.pop();
+                model.parent_els.pop();
             }
 
             Ok(Event::Eof) => {
-                // println!("{:#?}", parent_els);
-                println!("{}", assemble_model(root_attributes, paras));
+                println!("{}", model.assemble_model());
                 break;
             }
             Err(err) => {

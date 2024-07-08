@@ -1,10 +1,16 @@
 #![allow(dead_code)]
 
+use std::collections::BTreeMap;
 use quick_xml::events::Event;
 use quick_xml::Reader;
 use crate::model_traits::AosjModel;
 
-
+/// # Reads the USX file and reconstructs it into an AosjModel.
+///
+/// This function processes a USX file, parsing its
+/// content and reconstructing it into a model that implements the `AosjModel`
+/// trait. It handles different types of XML events such as start tags, end tags,
+/// empty elements, and text nodes.
 pub fn deserialize_from_file<T:AosjModel>(input_file_path: &str) {
     let mut reader = Reader::from_file(input_file_path).unwrap();
     reader.config_mut().trim_text(true);
@@ -20,10 +26,18 @@ pub fn deserialize_from_file<T:AosjModel>(input_file_path: &str) {
                 model.add_string_to_in_para(
                     &mut txt
                 );
-                model.push_element(el);
+                let mut attributes: BTreeMap<String, String> = BTreeMap::new();
+                for att in el.attributes() {
+                    attributes.insert(
+                        String::from_utf8(att.clone().unwrap().key.local_name().as_ref().to_vec()).unwrap(),
+                        String::from_utf8(att.clone().unwrap().value.as_ref().to_vec()).unwrap()
+                    );
+                }
+                let tag_name = String::from_utf8(el.name().as_ref().to_vec()).unwrap();
+
+                model.push_element(attributes, tag_name.clone());
                 let current_parent = model.parent_els().clone();
 
-                let tag_name = model.parent_els().last().unwrap().tag_name.clone();
                 if tag_name == "usx" {
                     model.add_root_metadata(
                         current_parent.last().unwrap().attributes.get("version").unwrap(),
@@ -50,8 +64,16 @@ pub fn deserialize_from_file<T:AosjModel>(input_file_path: &str) {
 
             Ok(Event::Empty(el)) => {
                 model.add_string_to_in_para(&mut txt);
-                model.push_element(el);
-                let tag_name = model.parent_els().last().unwrap().tag_name.clone();
+                let mut attributes: BTreeMap<String, String> = BTreeMap::new();
+                for att in el.attributes() {
+                    attributes.insert(
+                        String::from_utf8(att.clone().unwrap().key.local_name().as_ref().to_vec()).unwrap(),
+                        String::from_utf8(att.clone().unwrap().value.as_ref().to_vec()).unwrap()
+                    );
+                }
+                let tag_name = String::from_utf8(el.name().as_ref().to_vec()).unwrap();
+
+                model.push_element(attributes, tag_name.clone());
 
                 if tag_name == "verse" && !model.parent_els().last().unwrap().attributes.contains_key("eid") {
                     model.add_verse_to_in_para(

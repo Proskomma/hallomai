@@ -1,21 +1,32 @@
 #![allow(dead_code)]
 use std::collections::BTreeMap;
-use quick_xml::events::BytesStart;
 use crate::aosj_string::element::Element;
 use crate::model_traits::AosjModel;
 
+/// # Represents the model that contains all utility objects and their types.
+///
+/// This struct is used to parse and model a USX (Unified Scripture XML) document,
+/// providing methods to handle different elements and their attributes.
 pub struct AosjStringModel {
+    /// Attributes of the root element.
     pub root_attributes: BTreeMap<String, String>,
+    /// Collection of paragraphs in the document.
     pub paras: Vec<String>,
+    /// Current paragraph content being processed.
     pub current_para: String,
+    /// Stack of paragraph content vectors.
     pub stack_in_paras: Vec<Vec<String>>,
+    /// Stack for character markers.
     pub char_marker_stack: Vec<String>,
+    /// Stack for notes.
     pub note_stack: Vec<String>,
+    /// Stack of parent elements.
     pub parent_els: Vec<Element>
 }
 
+/// # We implement all the functions of the trait for the above model
 impl AosjModel for AosjStringModel {
-
+    /// Creates a new instance of the model.
     fn new() -> Self {
         AosjStringModel {
             root_attributes: BTreeMap::new(),
@@ -27,23 +38,16 @@ impl AosjModel for AosjStringModel {
             parent_els: Vec::new()
         }
     }
-
-    fn push_element(&mut self, el: BytesStart) {
-        let mut attributes: BTreeMap<String, String> = BTreeMap::new();
-        for att in el.attributes() {
-            attributes.insert(
-                String::from_utf8(att.clone().unwrap().key.local_name().as_ref().to_vec()).unwrap(),
-                String::from_utf8(att.clone().unwrap().value.as_ref().to_vec()).unwrap());
-        }
-
+    /// Pushes an element to the parent elements stack.
+    fn push_element(&mut self, attributes: BTreeMap<String,String>, tag_name: String) {
         self.parent_els.push(Element {
-            tag_name: String::from_utf8(el.name().as_ref().to_vec()).unwrap(),
+            tag_name,
             attributes,
         });
     }
 
 
-
+    /// Retrieves a formatted string of attributes.
     fn get_attributes(&self) -> String {
         let mut attributes = Vec::new();
         if let Some(element) = self.parent_els.last() {
@@ -61,15 +65,15 @@ impl AosjModel for AosjStringModel {
     }
 
 
-
+    /// Adds root metadata to the model.
     fn add_root_metadata(&mut self, version_value: &String) {
         self.root_attributes.insert("version".to_string(), version_value.to_string());
     }
-
+    /// Starts a new book with given attributes.
     fn start_book(&mut self, attributes: String){
         self.stack_in_paras.push(vec![format!("{{ \"type\": \"book\", {}, \"content\": [", attributes)]);
     }
-
+    /// Ends the current book.
     fn end_book(&mut self) {
         let mut last = self.stack_in_paras.pop().unwrap();
         let mut last_of_last = last.pop().unwrap();
@@ -84,11 +88,11 @@ impl AosjModel for AosjStringModel {
         self.paras.push(self.stack_in_paras.pop().unwrap().join(" "));
         self.stack_in_paras.clear();
     }
-
+    /// Starts a new paragraph with given attributes.
     fn start_new_para(&mut self, attributes: String) {
         self.stack_in_paras.push(vec![format!("{{ \"type\": \"para\",{}, \"content\": [ ", attributes)]);
     }
-
+    /// Ends the current paragraph.
     fn end_new_para(&mut self) {
         let mut last = self.stack_in_paras.pop().unwrap();
         let mut last_of_last = last.pop().unwrap();
@@ -103,7 +107,7 @@ impl AosjModel for AosjStringModel {
         self.paras.push(self.stack_in_paras.pop().unwrap().join(" "));
         self.stack_in_paras.clear();
     }
-
+    /// Adds a string to the current paragraph content
     fn add_string_to_in_para(&mut self, txt: &mut Vec<String>) {
         if txt.len() !=0 {
 
@@ -115,31 +119,31 @@ impl AosjModel for AosjStringModel {
             txt.clear();
         }
     }
-
+    /// Adds a new chapter with given attributes.
     fn add_chapter(&mut self, attributes: String) {
         self.paras.push(format!("{{ \"type\": \"chapter\", {} }}", attributes).to_string());
     }
-
+    /// Adds a verse to the current paragraph.
     fn add_verse_to_in_para(&mut self, attributes: String) {
         let mut last = self.stack_in_paras.pop().unwrap();
         last.push(format!("{{ \"type\": \"verse\", {} }},", attributes).to_string());
         self.stack_in_paras.push(last);
 
     }
-
+    /// Adds a milestone with given attributes.
     fn add_milestone(&mut self, attributes: String) {
         let mut last = self.stack_in_paras.pop().unwrap();
         last.push(format!("{{ \"type\": \"ms\", {} }},", attributes).to_string());
         self.stack_in_paras.push(last);
 
     }
-
+    /// Starts adding a character marker.
     fn start_add_char_marker(&mut self, attributes: String) {
         let mut current_char:Vec<String> = Vec::new();
         current_char.push(format!("{{ \"type\": \"char\", {}, \"content\": [", attributes).to_string());
         self.stack_in_paras.push(current_char);
     }
-
+    /// Ends the character marker addition.
     fn end_add_char_marker(&mut self, txt: &mut Vec<String>) {
         if !txt.is_empty() {
             let mut last = self.stack_in_paras.pop().unwrap();
@@ -167,11 +171,11 @@ impl AosjModel for AosjStringModel {
             self.stack_in_paras.push(last);
         }
     }
-
+    /// Starts adding a note with given attributes.
     fn start_add_note(&mut self, attributes: String) {
         self.stack_in_paras.push(vec![format!("{{ \"type\": \"note\", {}, \"content\": [", attributes).to_string()]);
     }
-
+    /// Ends the note addition.
     fn end_add_note(&mut self, txt: &mut Vec<String>) {
         if !txt.is_empty() {
             let mut last = self.stack_in_paras.pop().unwrap();
@@ -201,7 +205,7 @@ impl AosjModel for AosjStringModel {
     }
 
 
-
+    /// Assembles the model into a JSON string.
     fn assemble_model(&self) -> String {
         let mut model = "".to_string();
         model += "{";
@@ -212,7 +216,7 @@ impl AosjModel for AosjStringModel {
         model
     }
 
-
+    /// Returns a mutable reference to the parent elements stack.
     fn parent_els(&mut self) -> &mut Vec<Element> {
         &mut self.parent_els
     }

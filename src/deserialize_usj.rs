@@ -1,5 +1,6 @@
 #![allow(dead_code)]
 
+use std::collections::BTreeMap;
 use std::fs::File;
 use std::io::BufReader;
 use serde_json::Value;
@@ -7,10 +8,9 @@ use crate::model_traits::AosjModel;
 
 /// # Reads the USJ file and reconstructs it into an AosjModel.
 ///
-/// These functions process a USJ file, parsing its
-/// content and reconstructing it into a model that implements the `AosjModel`
-/// trait. It handles different types of XML events such as start tags, end tags,
-/// empty elements, and text nodes.
+/// This function processes a USJ file, parsing its content and reconstructing
+/// it into a model that implements the `AosjModel` trait. It handles different
+/// types of elements such as books, paragraphs, chapters, verses, characters, and notes.
 
 fn read_content<T:AosjModel>(model: &mut T, object: &Value) {
     let mut txt: Vec<String> = Vec::new();
@@ -19,30 +19,44 @@ fn read_content<T:AosjModel>(model: &mut T, object: &Value) {
             txt.push(text.to_string());
         }
         Value::Object(obj) => {
+            let mut attributes: BTreeMap<String, String> = BTreeMap::new();
+
+            for (key, value) in obj.iter() {
+                if key != "content" && key != "type" {
+                    attributes.insert(key.to_string(), value.as_str().unwrap().parse().unwrap());
+                }
+            }
+
+            let tag_name = obj.get("type").unwrap().to_string();
+            model.push_element(attributes.clone(), tag_name);
+
             match obj.get("type").and_then(|t| t.as_str()) {
                 Some("verse") => {
-                    let marker = obj.get("marker").expect("Missing marker").as_str().expect("Marker should be a string");
-                    let number = obj.get("number").expect("Missing number").as_str().expect("Number should be a string");
-                    model.add_verse_to_in_para(format!("\"marker\": \"{}\", \"number\": \"{}\"", marker, number));
+                    model.add_verse_to_in_para(model.get_attributes());
+                    model.parent_els().pop();
+                }
+                Some("ms") => {
+                    model.add_milestone(model.get_attributes());
+                    model.parent_els().pop();
                 }
                 Some("char") => {
-                    let marker = obj.get("marker").expect("Missing marker").as_str().expect("Marker should be a string");
-                    model.start_add_char_marker(format!("\"marker\": \"{}\"", marker));
+                    model.start_add_char_marker(model.get_attributes());
                     if let Some(contents) = obj.get("content").and_then(|c| c.as_array()) {
                         for object in contents {
                             read_content(model, object);
                         }
                     }
+                    model.parent_els().pop();
                     model.end_add_char_marker(&mut txt);
                 }
                 Some("note") => {
-                    let marker = obj.get("marker").expect("Missing marker").as_str().expect("Marker should be a string");
-                    model.start_add_note(format!("\"marker\": \"{}\"", marker));
+                    model.start_add_note(model.get_attributes());
                     if let Some(contents) = obj.get("content").and_then(|c| c.as_array()) {
                         for object in contents {
                             read_content(model, object);
                         }
                     }
+                    model.parent_els().pop();
                     model.end_add_note(&mut txt);
                 }
                 _=> {}
@@ -53,7 +67,7 @@ fn read_content<T:AosjModel>(model: &mut T, object: &Value) {
     model.add_string_to_in_para(&mut txt);
 }
 
-pub fn deserialize_from_file<T:AosjModel>(input_file_path: &str) {
+pub fn deserialize_from_file<T:AosjModel>(input_file_path: &str) -> String {
 
     let file = File::open(input_file_path).expect("Unable to open file");
     let reader = BufReader::new(file);
@@ -67,31 +81,39 @@ pub fn deserialize_from_file<T:AosjModel>(input_file_path: &str) {
     if let Some(content) = json.get("content").and_then(|c| c.as_array()) {
         for element in content {
             if let Some(obj) = element.as_object() {
+
+                let mut attributes: BTreeMap<String, String> = BTreeMap::new();
+
+                for (key, value) in obj.iter() {
+                    if key != "content" && key != "type" {
+                        attributes.insert(key.to_string(), value.as_str().unwrap().parse().unwrap());
+                    }
+                }
+                let tag_name = obj.get("type").unwrap().to_string();
+                model.push_element(attributes, tag_name);
+
                 match obj.get("type").and_then(|t| t.as_str()) {
                     Some("book") => {
-                        let marker = obj.get("marker").expect("Missing marker").as_str().expect("Marker should be a string");
-                        let code = obj.get("code").expect("Missing code").as_str().expect("Code should be a string");
-                        model.start_book(format!("\"marker\": \"{}\", \"code\": \"{}\"", marker, code));
+                        model.start_book(model.get_attributes());
                         if let Some(contents) = obj.get("content").and_then(|c| c.as_array()) {
                             for object in contents {
                                 read_content(&mut model, object);
+                                model.parent_els().pop();
                             }
                         }
                         model.end_book();
                     }
                     Some("chapter") => {
-                        let marker = obj.get("marker").expect("Missing marker").as_str().expect("Marker should be a string");
-                        let number = obj.get("number").expect("Missing number").as_str().expect("Number should be a string");
-                        model.add_chapter(format!("\"marker\": \"{}\", \"number\": \"{}\"", marker, number));
+                        model.add_chapter(model.get_attributes());
                     }
                     Some("para") => {
-                        let marker = obj.get("marker").expect("Missing marker").as_str().expect("Marker should be a string");
-                        model.start_new_para(format!("\"marker\": \"{}\"", marker));
+                        model.start_new_para(model.get_attributes());
                         if let Some(contents) = obj.get("content").and_then(|c| c.as_array()) {
                             for object in contents {
                                 read_content(&mut model, object);
                             }
                         }
+                        model.parent_els().pop();
                         model.end_new_para();
                     }
                     _ => {}
@@ -100,5 +122,39 @@ pub fn deserialize_from_file<T:AosjModel>(input_file_path: &str) {
 
         }
     }
-    println!("{}", model.assemble_model());
+    model.assemble_model()
+}
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use serde_json::Value;
+    use crate::aosj_string::aosj_string_model::AosjStringModel;
+
+    #[test]
+    fn it_deserialize_usj() {
+
+
+        let file_path = "./assets/small.json";
+        let result = deserialize_from_file::<AosjStringModel>(file_path);
+        let result_json: Value = serde_json::from_str(&result).unwrap();
+
+        // println!("{:#?}", result_json.get("content").unwrap()[13].get("content"));
+
+        assert_eq!(result_json.get("version").unwrap(), "0.2.1");
+
+        assert_eq!(result_json.get("content").unwrap()[0].get("code").unwrap(), "MAT");
+        assert_eq!(result_json.get("content").unwrap()[10].get("content").unwrap()[1], "Praise the ");
+        assert_eq!(result_json.get("content").unwrap()[11].get("content").unwrap()[0], "God's love never fails ");
+        assert_eq!(result_json.get("content").unwrap()[11].get("content").unwrap()[1].get("content").unwrap()[0], "Selah");
+        assert_eq!(result_json.get("content").unwrap()[11].get("content").unwrap()[1].get("content").unwrap()[1].get("content").unwrap()[0], "Note content");
+        assert_eq!(result_json.get("content").unwrap()[13].get("content").unwrap()[1].get("type").unwrap(), "ms");
+    }
+    #[test]
+    #[should_panic]
+    fn fail_parse_json() {
+        let file_path = "./assets/data/bad/bad_json.json";
+        let result = deserialize_from_file::<AosjStringModel>(file_path);
+    }
 }

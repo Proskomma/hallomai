@@ -10,3 +10,9 @@ serde_with = "3.8.1"
 serde-xml-rs = "0.6.0"
 xml_oxide = "0.3.0"
 quick-xml = "0.35.0"
+tree-sitter = "0.22.6"
+#tree-sitter-usfm = { path = "../tree-sitter-usfm" }
+cc = "1.1.0"
+
+[dev-dependencies]
+tempfile = "3.2"

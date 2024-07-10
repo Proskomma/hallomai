@@ -99,7 +99,15 @@
           "type": "char",
           "marker": "qs",
           "content": [
-            "Selah"
+            "Selah",
+            {
+              "type": "note",
+              "caller": "*",
+              "marker": "f",
+              "content": [
+                "Note content"
+              ]
+            }
           ]
         }
       ]
@@ -121,7 +129,17 @@
       "type": "para",
       "marker": "q1",
       "content": [
-        "May his glory fill the whole world."
+        "May his glory fill the whole world.",
+        {
+          "type": "ms",
+          "marker": "zaln-s",
+          "x-content": "עֹֽבַדְיָ֑ה",
+          "x-lemma": "עֹבַדְיָה",
+          "x-morph": "He,Np",
+          "x-occurrence": "1",
+          "x-occurrences": "1",
+          "x-strong": "H5662"
+        }
       ]
     },
     {

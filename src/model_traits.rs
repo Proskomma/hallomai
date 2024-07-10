@@ -1,6 +1,7 @@
 #![allow(dead_code)]
 
 use std::collections::BTreeMap;
+use std::format;
 use crate::aosj_string::element::Element;
 
 /// # Trait that defines functions for adding elements to the model.
@@ -12,6 +13,7 @@ pub trait AosjModel {
     fn new() -> Self;
     /// Pushes an element to the parent elements stack.
     fn push_element(&mut self, attributes: BTreeMap<String,String>, tag_name: String);
+    fn validate_attributes(&self, tag_name: &str, attributes: &BTreeMap<String, String>) -> Result<(), String>;
     /// Retrieves a formatted string of attributes.
     fn get_attributes(&self) -> String;
     /// Adds root metadata to the model.

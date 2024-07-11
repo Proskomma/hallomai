@@ -22,10 +22,10 @@ mod deserialize_usx;
 mod deserialize_usj;
 mod deserialize_usfm;
 
-extern crate tree_sitter_usfm_test;
+extern crate rust_usfm_parser;
 
 use tree_sitter::Node;
-use tree_sitter_usfm_test::parse_usfm;
+use rust_usfm_parser::USFMParser;
 
 
 /// This function initializes the deserialization process for a USX file and
@@ -60,6 +60,6 @@ accuse you of?"\qt-e\*
 surprised."#;
 
 
-    deserialize_usfm::print_ast_node_info(parse_usfm(usfm_code).root_node(), usfm_code, 0);
+    deserialize_usfm::print_ast_node_info(USFMParser(usfm_code).root_node(), usfm_code, 0);
 }
 

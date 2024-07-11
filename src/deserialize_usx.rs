@@ -1,6 +1,5 @@
 #![allow(dead_code)]
 
-use std::any::Any;
 use std::collections::BTreeMap;
 use quick_xml::events::Event;
 use quick_xml::Reader;

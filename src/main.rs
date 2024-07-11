@@ -16,44 +16,50 @@
 mod model_traits;
 mod aosj_string;
 
-use crate::aosj_string::aosj_string_model::AosjStringModel;
+// use crate::aosj_string::aosj_string_model::AosjStringModel;
 
 mod deserialize_usx;
 mod deserialize_usj;
-mod parser;
+mod deserialize_usfm;
+
+extern crate tree_sitter_usfm_test;
+
+use tree_sitter::Node;
+use tree_sitter_usfm_test::parse_usfm;
 
 
 /// This function initializes the deserialization process for a USX file and
 /// processes it using the `AosjStringModel`.
 fn main() {
 
+    // let input_file_path = "./assets/milestone_attributes.usx";
     // let input_file_path = "./assets/small.json";
-    let input_file_path = "./assets/milestone_attributes.usx";
-
-
-    if input_file_path.ends_with(".usx") {
-        // println!("{}",deserialize_usx::deserialize_from_file::<AosjStringModel>(input_file_path));
-        // let a = deserialize_usx::deserialize_from_file::<AosjStringModel>(input_file_path);
-    } else if input_file_path.ends_with(".json") {
-        // println!("{}",deserialize_usj::deserialize_from_file::<AosjStringModel>(input_file_path));
-        // let a = deserialize_usj::deserialize_from_file::<AosjStringModel>(input_file_path);
-    }
-
-    let usfm_code = r"\p This is a paragraph \v 1 This is a verse";
-    unsafe { parser::parse_usfm(usfm_code); }
-
-
-
-    // let language = "usfm";
-    // let package = "proskomma_2".to_string();
-    // let source_directory = format!("{}/src", package);
-    // let source_file = format!("{}/parser.c", source_directory);
     //
-    // println!("cargo:rerun-if-changed={}", "parser.c"); // <1>
     //
-    // cc::Build::new()
-    //     .file("parser.c")
-    //     .include("src")
-    //     .compile(&package); // <2>
+    // if input_file_path.ends_with(".usx") {
+    //     // println!("{}",deserialize_usx::deserialize_from_file::<AosjStringModel>(input_file_path));
+    //     // let a = deserialize_usx::deserialize_from_file::<AosjStringModel>(input_file_path);
+    // } else if input_file_path.ends_with(".json") {
+    //     // println!("{}",deserialize_usj::deserialize_from_file::<AosjStringModel>(input_file_path));
+    //     // let a = deserialize_usj::deserialize_from_file::<AosjStringModel>(input_file_path);
+    // }
+
+    let usfm_code = r#"\id MAT some other info of file
+\c 1
+\p
+\v 11 Jesus stood before the Roman governor, who questioned him.
+\qt-s |who="Pilate"\* "Are
+you the king of the Jews?"\qt-e\* he asked.
+\p \qt-s |who="Jesus"\*"So you say,"\qt-e\* answered Jesus.
+\v 12 But he said nothing in response to the accusations of the chief priests and elders.
+\p
+\v 13 So Pilate said to him, \qt-s |who="Pilate"\*"Don't you hear all these things they
+accuse you of?"\qt-e\*
+\p
+\v 14 But Jesus refused to answer a single word, with the result that the Governor was greatly
+surprised."#;
+
+
+    deserialize_usfm::print_ast_node_info(parse_usfm(usfm_code).root_node(), usfm_code, 0);
 }
 

@@ -318,7 +318,6 @@ dependencies = [
 name = "proskomma_2"
 version = "0.1.0"
 dependencies = [
- "cc",
  "quick-xml",
  "serde",
  "serde-xml-rs",
@@ -326,14 +325,15 @@ dependencies = [
  "serde_with",
  "tempfile",
  "tree-sitter",
+ "tree_sitter_usfm_test",
  "xml_oxide",
 ]
 
 [[package]]
 name = "quick-xml"
-version = "0.35.0"
+version = "0.36.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "86e446ed58cef1bbfe847bc2fda0e2e4ea9f0e57b90c507d4781292590d72a4e"
+checksum = "4091e032efecb09d7b1f711f487b85ab925632a842627e3200fb088382cde32c"
 dependencies = [
  "memchr",
 ]
@@ -556,6 +556,14 @@ checksum = "df7cc499ceadd4dcdf7ec6d4cbc34ece92c3fa07821e287aedecd4416c516dca"
 dependencies = [
  "cc",
  "regex",
+]
+
+[[package]]
+name = "tree_sitter_usfm_test"
+version = "0.1.0"
+dependencies = [
+ "cc",
+ "tree-sitter",
 ]
 
 [[package]]

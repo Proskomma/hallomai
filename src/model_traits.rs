@@ -1,7 +1,6 @@
 #![allow(dead_code)]
 
 use std::collections::BTreeMap;
-use std::format;
 use crate::aosj_string::element::Element;
 
 /// # Trait that defines functions for adding elements to the model.

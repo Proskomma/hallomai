@@ -1,6 +1,6 @@
 #![allow(dead_code)]
 use std::collections::BTreeMap;
-use crate::aosj_string::aosj_string_model::element::Element;
+use crate::aosj_string::element::Element;
 use crate::model_traits::AosjModel;
 
 /// # Represents the model that contains all utility objects and their types.

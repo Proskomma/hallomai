@@ -90,6 +90,7 @@ pub fn deserialize_from_file<T:AosjModel>(input_file_path: &str) -> String {
                     }
                 }
                 let tag_name = obj.get("type").unwrap().to_string();
+                println!("{:?}", tag_name);
                 model.push_element(attributes, tag_name);
 
                 match obj.get("type").and_then(|t| t.as_str()) {

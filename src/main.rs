@@ -24,7 +24,7 @@ mod deserialize_usfm;
 
 extern crate rust_usfm_parser;
 
-use tree_sitter::Node;
+// use tree_sitter::Node;
 use rust_usfm_parser::USFMParser;
 
 

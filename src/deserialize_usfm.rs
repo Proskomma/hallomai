@@ -1,7 +1,8 @@
 use std::fs::File;
+use std::io::Read;
 #[allow(dead_code)]
 
-use tree_sitter_usfm_test;
+use rust_usfm_parser;
 use tree_sitter;
 use tree_sitter::Node;
 
@@ -31,9 +32,9 @@ pub fn print_ast_node_info(node: Node, source_code: &str, depth: usize) {
 
 pub fn deserialize_from_file<T:AosjModel>(input_file_path: &str) {
 
-    let mut file = File::open(input_file_path)?;
+    let mut file = File::open(input_file_path).unwrap();
     let mut content = String::new();
-    file.read_to_string(&mut content)?;
+    file.read_to_string(&mut content).unwrap();
     let wrapped_content = format!(r#"{}"#, content);
 
     let mut model = T::new();

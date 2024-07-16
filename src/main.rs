@@ -16,17 +16,21 @@
 mod model_traits;
 mod aosj_string;
 
-// use crate::aosj_string::aosj_string_model::AosjStringModel;
+use aosj_string::aosj_string_model::AosjStringModel;
 
 mod deserialize_usx;
 mod deserialize_usj;
 mod deserialize_usfm;
+mod reg_ex_tests;
 
 extern crate rust_usfm_parser;
 
+// use regex::Regex;
+// use std::collections::HashMap;
+// use regex::{Captures, Regex};
 // use tree_sitter::Node;
 // use rust_usfm_parser::USFMParser;
-use crate::aosj_string::aosj_string_model::AosjStringModel;
+// use crate::aosj_string::aosj_string_model::AosjStringModel;
 
 
 /// This function initializes the deserialization process for a USX file and
@@ -44,11 +48,20 @@ fn main() {
         // let b = deserialize_usj::deserialize_from_file::<AosjStringModel>(input_file_path);
         // println!("{}",b);
     } else if input_file_path.ends_with(".usfm") {
+        // let c = deserialize_usfm::deserialize_from_file::<AosjStringModel>(input_file_path);
+
+
         let c = deserialize_usfm::deserialize_from_file::<AosjStringModel>(input_file_path);
         println!("{}", c);
+
     }
 
-//     let usfm_code = r#"\id MAT some other info of file
+    // reg_ex_tests::extract_usfm_attributes(input_file_path);
+
+
+
+
+         // let usfm_code = r#"\id MAT some other info of file
 // \c 1
 // \p
 // \v 11 Jesus stood before the Roman governor, who questioned him.

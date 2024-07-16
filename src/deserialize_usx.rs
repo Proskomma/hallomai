@@ -34,6 +34,7 @@ pub fn deserialize_from_file<T:AosjModel>(input_file_path: &str) -> String {
                         String::from_utf8(att.clone().unwrap().value.as_ref().to_vec()).unwrap()
                     );
                 }
+
                 let tag_name = String::from_utf8(el.name().as_ref().to_vec()).unwrap();
 
                 model.push_element(attributes, tag_name.clone());
@@ -99,6 +100,7 @@ pub fn deserialize_from_file<T:AosjModel>(input_file_path: &str) -> String {
                 if model.parent_els().len()>1 {
                     txt.push(el.unescape().unwrap().into_owned());
                 }
+                println!("{:#?}", txt);
 
             }
 

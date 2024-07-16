@@ -10,27 +10,34 @@
       "type": "para",
       ,
       "content": [
-        "UTF-8
-        "  ] },{ "
-        type
-        ": "
-        para
-        ",, "
-        content
-        ": [   ] },{ "
-        type
-        ": "
-        para
-        ",, "
-        content
-        ": [   ] },{ "
-        type
-        ": "
-        para
-        ",, "
-        content
-        ": [   ] },{ "
-        type
-        ": "
-        chapter
-        ",  }]}
+        "UTF-8"
+      ]
+    },
+    {
+      "type": "para",
+      ,
+      "content": [
+        "Psalms"
+      ]
+    },
+    {
+      "type": "para",
+      ,
+      "content": [
+        "The Book of Psalms",
+        "Psalms",
+        "Psa"
+      ]
+    },
+    {
+      "type": "para",
+      ,
+      "content": [
+        "Psalms"
+      ]
+    },
+    {
+      "type": "chapter"
+    }
+  ]
+}

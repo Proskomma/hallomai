@@ -3,41 +3,124 @@
   "content": [
     {
       "type": "book",
-      ,
-      "content": []
+      "code": "PSA",
+      "marker": "id",
+      "content": [
+        " unfoldingWord Literal Text"
+      ]
     },
     {
       "type": "para",
-      ,
+      "marker": "ide",
       "content": [
         "UTF-8"
       ]
     },
     {
       "type": "para",
-      ,
+      "marker": "sts",
+      "content": [
+        "2"
+      ]
+    },
+    {
+      "type": "para",
+      "marker": "h",
       "content": [
         "Psalms"
       ]
     },
     {
       "type": "para",
-      ,
+      "marker": "toc1",
       "content": [
-        "The Book of Psalms",
-        "Psalms",
+        "The Book of Psalms"
+      ]
+    },
+    {
+      "type": "para",
+      "marker": "toc2",
+      "content": [
+        "Psalms"
+      ]
+    },
+    {
+      "type": "para",
+      "marker": "toc3",
+      "content": [
         "Psa"
       ]
     },
     {
+      "type": "chapter",
+      "marker": "c",
+      "number": "1"
+    },
+    {
       "type": "para",
-      ,
+      "marker": "mt",
       "content": [
         "Psalms"
       ]
     },
     {
-      "type": "chapter"
+      "type": "para",
+      "marker": "s",
+      "content": [
+        "Here comes a psalm"
+      ]
+    },
+    {
+      "type": "para",
+      "marker": "s2",
+      "content": [
+        "See also all the other psalms"
+      ]
+    },
+    {
+      "type": "para",
+      "marker": "q",
+      "content": [
+        {
+          "type": "verse",
+          "marker": "v",
+          "number": "1"
+        },
+        {
+          "type": "char",
+          "marker": "w",
+          "content": [
+            "Blessed is the man"
+          ]
+        },
+        {
+          "type": "char",
+          "marker": "bd",
+          "content": [
+            {
+              "type": "char",
+              "marker": "+it",
+              "content": [
+                " who does not"
+              ]
+            },
+            " walk"
+          ]
+        },
+        " in the advice of the wicked,"
+      ]
+    },
+    {
+      "type": "para",
+      "marker": "q",
+      "content": [
+        "or stand in the pathway with sinners,"
+      ]
+    },
+    {
+      "type": "para",
+      ,
+      "content": []
     }
   ]
 }

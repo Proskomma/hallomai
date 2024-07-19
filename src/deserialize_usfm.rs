@@ -198,60 +198,180 @@ pub fn deserialize_from_file<T:AosjModel>(input_file_path: &str) -> String {
 
     let exclude_types = vec![TokenType::WordLike, TokenType::LineSpace, TokenType::Punctuation];
     let mut txt: Vec<String> = Vec::new();
-    let mut currentState: String = String::new();
+    let mut current_state: String = String::new();
+    let mut in_para: bool = false;
+
+
     for event in &events {
         if !exclude_types.contains(&event.token_type) {
             let mut marker = event.value.trim().replace("\\", "");
 
-            if marker == "usfm" {
-                model.add_root_metadata(&"3.0".to_string())
-            } else if marker == "id" {
-                currentState = marker.clone();
-                attributes.insert("marker".to_string(), marker.clone());
 
-            } else if event.token_type == TokenType::Eol && currentState == "id" { // === end_id
-
-                model.add_string_to_in_para(&mut txt);
-                txt.clear();
-                model.end_book();
-                currentState.clear();
-            } else if event.token_type == TokenType::Chapter {
-                attributes.clear();
-                currentState="c".to_string();
-                let tag_name = "chapter".to_string();
-                attributes.insert("marker".to_string(), "c".to_string());
-                if let Some(num) = number.captures(event.value.as_str()) {
-                    attributes.insert("number".to_string(), num[0].to_string());
+            match (&event.token_type, marker.as_str(), current_state.as_str()) {
+                (TokenType::StartTag, "usfm", _) => {
+                    current_state = "usfm".to_string();
                 }
-                model.push_element(attributes.clone(), tag_name);
-                println!("{}", model.get_attributes());
-                model.add_chapter(model.get_attributes());
-
-            } else if event.token_type == TokenType::Verses {
-                attributes.clear();
-                currentState="v".to_string();
-                let tag_name = "verse".to_string();
-                attributes.insert("marker".to_string(), "v".to_string());
-                if let Some(num) = number.captures(event.value.as_str()) {
-                    attributes.insert("number".to_string(), num[0].to_string());
+                (TokenType::StartTag, "id", _ ) => {
+                    current_state = "book".to_string();
+                    attributes.insert("marker".to_string(), marker.clone());
                 }
-                model.push_element(attributes.clone(), tag_name);
-                println!("{}", model.get_attributes());
-                model.add_verse_to_in_para(model.get_attributes());
+                (TokenType::StartTag, "bd", _) => {
+                    current_state = "char".to_string();
+
+                    let tag_name = "char".to_string();
+                    attributes.insert("marker".to_string(), marker);
+                    model.push_element(attributes.clone(), tag_name);
+                    model.start_add_char_marker(
+                        model.get_attributes()
+                    );
+                    attributes.clear();
+                }
+                (TokenType::StartTag, "qs", _) => {
+                    current_state = "char".to_string();
+
+                    let tag_name = "char".to_string();
+                    attributes.insert("marker".to_string(), marker);
+                    model.push_element(attributes.clone(), tag_name);
+                    model.start_add_char_marker(
+                        model.get_attributes()
+                    );
+                    attributes.clear();
+                }
+                (TokenType::StartTag, "w", _) => {
+                    current_state = "char".to_string();
+
+                    let tag_name = "char".to_string();
+                    attributes.insert("marker".to_string(), marker);
+                    model.push_element(attributes.clone(), tag_name);
+                    model.start_add_char_marker(
+                        model.get_attributes()
+                    );
+                    attributes.clear();
+                }
+                (TokenType::StartTag, "+it", _) => {
+                    current_state = "char".to_string();
+
+                    let tag_name = "char".to_string();
+                    attributes.insert("marker".to_string(), marker);
+                    model.push_element(attributes.clone(), tag_name);
+                    model.start_add_char_marker(
+                        model.get_attributes()
+                    );
+                    attributes.clear();
+                }
+                (TokenType::StartTag, _, _) => {
+                    if in_para == true  && !txt.is_empty() {
+                        model.add_string_to_in_para(&mut txt);
+                        model.end_new_para();
+                        txt.clear();
+                    } else {
+                        let tag_name = "para".to_string();
+                        model.push_element(attributes.clone(), tag_name);
+                        model.start_new_para(model.get_attributes());
+                        in_para = true;
+                    }
+                    current_state = "para".to_string();
+                    attributes.insert("marker".to_string(), marker.clone());
+
+                }
+                (TokenType::Chapter, _, _) => {
+                    attributes.clear();
+                    current_state ="c".to_string();
+                    let tag_name = "chapter".to_string();
+                    attributes.insert("marker".to_string(), "c".to_string());
+
+                    if let Some(num) = number.captures(event.value.as_str()) {
+                        attributes.insert("number".to_string(), num[0].to_string());
+                    }
+
+                    model.push_element(attributes.clone(), tag_name);
+                    model.add_chapter(model.get_attributes());
+                    attributes.clear();
+                }
+                (TokenType::Verses, _, _) => {
+                    attributes.clear();
+                    current_state ="verse".to_string();
+                    let tag_name = "verse".to_string();
+                    attributes.insert("marker".to_string(), "v".to_string());
+                    if let Some(num) = number.captures(event.value.as_str()) {
+                        attributes.insert("number".to_string(), num[0].to_string());
+                    }
+                    model.push_element(attributes.clone(), tag_name);
+
+                    model.add_verse_to_in_para(model.get_attributes());
+                    attributes.clear();
+                }
+                (TokenType::Eol, _, "book") => {
+                    model.add_string_to_in_para(&mut txt);
+                    model.end_book();
+                    txt.clear();
+                    current_state.clear();
+                }
+                (TokenType::Eol, _, "usfm") => {
+                    model.add_root_metadata(&txt.join(""));
+                    txt.clear();
+                }
+                (TokenType::Eol, _, _) => {
+                    if txt.is_empty() && in_para == true{
+                        let tag_name = "para".to_string();
+                        model.push_element(attributes.clone(), tag_name);
+                        model.start_new_para(model.get_attributes());
+                    } else if in_para == true {
+                        model.add_string_to_in_para(&mut txt);
+                        model.end_new_para();
+                    }
+                }
+                (TokenType::EndTag, _, "char") => {
+                    model.end_add_char_marker(&mut txt);
+                    txt.clear();
+                }
+                // (TokenType::EndTag, "qs*", "char") => {
+                //     model.end_add_char_marker(&mut txt);
+                //     txt.clear();
+                // }
+                // (TokenType::EndTag, "w*", "char") => {
+                //     model.end_add_char_marker(&mut txt);
+                //     txt.clear();
+                // }
+                // (TokenType::EndTag, "+it*", "char") => {
+                //     model.end_add_char_marker(&mut txt);
+                //     txt.clear();
+                // }
+                _ => {}
             }
+
         } else {
-            if currentState == "id" && txt.is_empty() && event.token_type == TokenType::WordLike {
-                let tag_name = "book".to_string();
-                attributes.insert("code".to_string(), event.value.clone());
-                model.push_element(attributes.clone(), tag_name);
-                model.start_book(model.get_attributes());
+            match (&event.token_type, current_state.as_str(), txt.is_empty()) {
+                (TokenType::WordLike, "book", true) => {
+                    let tag_name = "book".to_string();
+                    attributes.insert("code".to_string(), event.value.clone());
+                    model.push_element(attributes.clone(), tag_name);
+                    model.start_book(model.get_attributes());
+                    attributes.clear();
+                },
+                (TokenType::WordLike, "para", true) => {
+                    let tag_name = "para".to_string();
+                    model.push_element(attributes.clone(), tag_name);
+                    model.start_new_para(model.get_attributes());
+                    txt.push(event.value.as_str().to_string());
+                },
+                (TokenType::WordLike, "char", true) => {
+                    let tag_name = "char".to_string();
+                    model.push_element(attributes.clone(), tag_name);
+                    model.start_add_char_marker(model.get_attributes());
+                },
+                _ => { //TODO : gérer les espaces
+                    txt.push(event.value.as_str().to_string());
+                },
             }
-            else { //TODO: gérer les espaces
-                txt.push(event.value.as_str().to_string());
-            }
+
         }
 
 
+    }
+    if in_para == true {
+        model.add_string_to_in_para(&mut txt);
+        model.end_new_para();
     }
 
 

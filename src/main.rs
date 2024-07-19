@@ -48,10 +48,9 @@ fn main() {
         // let b = deserialize_usj::deserialize_from_file::<AosjStringModel>(input_file_path);
         // println!("{}",b);
     } else if input_file_path.ends_with(".usfm") {
-        // let c = deserialize_usfm::deserialize_from_file::<AosjStringModel>(input_file_path);
-
-
         let c = deserialize_usfm::deserialize_from_file::<AosjStringModel>(input_file_path);
+
+        // TODO : let c = deserialize_usfm::deserialize_from_file::<AosjObjectModel>(input_file_path);
         println!("{}", c);
 
     }

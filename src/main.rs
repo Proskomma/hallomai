@@ -22,8 +22,9 @@ mod deserialize_usx;
 mod deserialize_usj;
 mod deserialize_usfm;
 mod reg_ex_tests;
+mod const_usfm;
 
-extern crate rust_usfm_parser;
+// extern crate rust_usfm_parser;
 
 // use regex::Regex;
 // use std::collections::HashMap;
@@ -49,16 +50,14 @@ fn main() {
         // println!("{}",b);
     } else if input_file_path.ends_with(".usfm") {
         let c = deserialize_usfm::deserialize_from_file::<AosjStringModel>(input_file_path);
-
-        // TODO : let c = deserialize_usfm::deserialize_from_file::<AosjObjectModel>(input_file_path);
         println!("{}", c);
 
     }
 
+
+
+
     // reg_ex_tests::extract_usfm_attributes(input_file_path);
-
-
-
 
          // let usfm_code = r#"\id MAT some other info of file
 // \c 1

@@ -137,7 +137,7 @@ mod tests {
     fn it_deserialize_usj() {
 
 
-        let file_path = "./assets/small.json";
+        let file_path = "./assets/usj/small.json";
         let result = deserialize_from_file::<AosjStringModel>(file_path);
         let result_json: Value = serde_json::from_str(&result).unwrap();
 

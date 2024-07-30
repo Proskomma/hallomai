@@ -149,7 +149,7 @@ impl AosjModel for AosjStringModel {
             last_of_last.push_str(ultimate.as_str());
         }
         last.push(last_of_last);
-        last.push(format!(" ] }}").to_string());
+        last.push(format!("] }}").to_string());
         self.stack_in_paras.push(last);
 
         self.paras.push(self.stack_in_paras.pop().unwrap().join(" "));
@@ -157,7 +157,7 @@ impl AosjModel for AosjStringModel {
     }
     /// Starts a new paragraph with given attributes.
     fn start_new_para(&mut self, attributes: String) {
-        self.stack_in_paras.push(vec![format!("{{ \"type\": \"para\",{}, \"content\": [ ", attributes)]);
+        self.stack_in_paras.push(vec![format!("{{ \"type\": \"para\",{}, \"content\": [", attributes)]);
     }
     /// Ends the current paragraph.
     fn end_new_para(&mut self) {
@@ -168,7 +168,7 @@ impl AosjModel for AosjStringModel {
             last_of_last.push_str(ultimate.as_str());
         }
         last.push(last_of_last);
-        last.push(format!(" ] }}").to_string());
+        last.push(format!("] }}").to_string());
         self.stack_in_paras.push(last);
 
         self.paras.push(self.stack_in_paras.pop().unwrap().join(" "));
@@ -227,7 +227,7 @@ impl AosjModel for AosjStringModel {
             last_of_last.push_str(ultimate.as_str());
         }
         last.push(last_of_last);
-        last.push(format!(" ] }},").to_string());
+        last.push(format!("] }},").to_string());
         self.stack_in_paras.push(last);
 
 
@@ -259,7 +259,7 @@ impl AosjModel for AosjStringModel {
             last_of_last.push_str(ultimate.as_str());
         }
         last.push(last_of_last);
-        last.push(format!(" ] }},").to_string());
+        last.push(format!("] }},").to_string());
         self.stack_in_paras.push(last);
 
 
@@ -276,7 +276,8 @@ impl AosjModel for AosjStringModel {
     fn assemble_model(&self) -> String {
         let mut model = "".to_string();
         model += "{";
-        model += &format!(" \"version\": \"{}\",", self.root_attributes.get("version").unwrap().to_string());
+        let version = match self.root_attributes.get("version") {Some(v) => v.to_string(), None => {"".to_string()}};
+        model += &format!(" \"version\": \"{}\",", version);
         model += &format!(" \"content\": [{}]", self.paras.join(","));
 
         model += "}";

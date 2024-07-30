@@ -6,7 +6,7 @@
       "code": "PSA",
       "marker": "id",
       "content": [
-        " unfoldingWord Literal Text"
+        "unfoldingWord Literal Text"
       ]
     },
     {
@@ -32,7 +32,7 @@
     },
     {
       "type": "para",
-      "marker": "toc1",
+      "marker": "toc",
       "content": [
         "The Book of Psalms"
       ]
@@ -52,16 +52,16 @@
       ]
     },
     {
-      "type": "chapter",
-      "marker": "c",
-      "number": "1"
-    },
-    {
       "type": "para",
       "marker": "mt",
       "content": [
         "Psalms"
       ]
+    },
+    {
+      "type": "chapter",
+      "marker": "c",
+      "number": "1"
     },
     {
       "type": "para",
@@ -86,22 +86,25 @@
           "marker": "v",
           "number": "1"
         },
+        "Blessed is the ",
         {
           "type": "char",
+          "default": "Man",
           "marker": "w",
           "content": [
-            "Blessed is the man"
+            "man"
           ]
         },
+        " who ",
         {
           "type": "char",
           "marker": "bd",
           "content": [
             {
               "type": "char",
-              "marker": "+it",
+              "marker": "it",
               "content": [
-                " who does not"
+                "does not"
               ]
             },
             " walk"
@@ -119,8 +122,51 @@
     },
     {
       "type": "para",
-      ,
-      "content": []
+      "marker": "q",
+      "content": [
+        "or sit in the assembly of mockers.",
+        {
+          "type": "char",
+          "marker": "qs",
+          "content": [
+            "Selah"
+          ]
+        },
+        " Amen",
+        {
+          "type": "ms",
+          "marker": "ts"
+        },
+        {
+          "type": "verse",
+          "marker": "v",
+          "number": "2"
+        },
+        "Beginning ",
+        {
+          "type": "ms",
+          "marker": "zaln-s",
+          "x-content": "τέκνα",
+          "x-lemma": "τέκνον",
+          "x-morph": "Gr,N,,,,,NNP,",
+          "x-occurrence": "1",
+          "x-occurrences": "1",
+          "x-strong": "G5043"
+        },
+        {
+          "type": "char",
+          "marker": "w",
+          "x-occurrence": "1",
+          "x-occurrences": "1",
+          "content": [
+            "milestone"
+          ]
+        },
+        {
+          "type": "ms",
+          "marker": "zaln-e"
+        }
+      ]
     }
   ]
 }

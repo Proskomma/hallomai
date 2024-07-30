@@ -3,7 +3,7 @@ use std::collections::BTreeMap;
 use std::fmt;
 use std::fmt::{Debug, Display, Formatter};
 
-/// # Represents an XML element with a tag name and attributes.
+/// # Represents an element with a tag name and attributes.
 #[derive(Clone)]
 pub struct Element {
     /// The tag name of the element.

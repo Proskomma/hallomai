@@ -4,6 +4,8 @@ use std::collections::BTreeMap;
 use std::fs::File;
 use std::io::BufReader;
 use serde_json::Value;
+use tempfile::NamedTempFile;
+use crate::deserialize_usfm::deserialize_from_file_path_usfm;
 use crate::model_traits::AosjModel;
 
 /// # Reads the USJ file and reconstructs it into an AosjModel.
@@ -67,11 +69,8 @@ fn read_content<T:AosjModel>(model: &mut T, object: &Value) {
     model.add_string_to_in_para(&mut txt);
 }
 
-pub fn deserialize_from_file<T:AosjModel>(input_file_path: &str) -> String {
 
-    let file = File::open(input_file_path).expect("Unable to open file");
-    let reader = BufReader::new(file);
-    let json: Value = serde_json::from_reader(reader).expect("Unable to parse JSON");
+fn deserialize_from_file_usj<T:AosjModel>(json: Value) -> String {
 
     let mut model = T::new();
 
@@ -90,7 +89,6 @@ pub fn deserialize_from_file<T:AosjModel>(input_file_path: &str) -> String {
                     }
                 }
                 let tag_name = obj.get("type").unwrap().to_string();
-                println!("{:?}", tag_name);
                 model.push_element(attributes, tag_name);
 
                 match obj.get("type").and_then(|t| t.as_str()) {
@@ -126,36 +124,16 @@ pub fn deserialize_from_file<T:AosjModel>(input_file_path: &str) -> String {
     model.assemble_model()
 }
 
+pub fn deserialize_from_file_path_usj<T:AosjModel>(input_file_path: &str) -> String {
+    let file = File::open(input_file_path).expect("Unable to open file");
+    let reader = BufReader::new(file);
+    let json: Value = serde_json::from_reader(reader).expect("Unable to parse JSON");
+    deserialize_from_file_usj::<T>(json)
+}
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use serde_json::Value;
-    use crate::aosj_string::aosj_string_model::AosjStringModel;
-
-    #[test]
-    fn it_deserialize_usj() {
-
-
-        let file_path = "./assets/usj/small.json";
-        let result = deserialize_from_file::<AosjStringModel>(file_path);
-        let result_json: Value = serde_json::from_str(&result).unwrap();
-
-        // println!("{:#?}", result_json.get("content").unwrap()[13].get("content"));
-
-        assert_eq!(result_json.get("version").unwrap(), "0.2.1");
-
-        assert_eq!(result_json.get("content").unwrap()[0].get("code").unwrap(), "MAT");
-        assert_eq!(result_json.get("content").unwrap()[10].get("content").unwrap()[1], "Praise the ");
-        assert_eq!(result_json.get("content").unwrap()[11].get("content").unwrap()[0], "God's love never fails ");
-        assert_eq!(result_json.get("content").unwrap()[11].get("content").unwrap()[1].get("content").unwrap()[0], "Selah");
-        assert_eq!(result_json.get("content").unwrap()[11].get("content").unwrap()[1].get("content").unwrap()[1].get("content").unwrap()[0], "Note content");
-        assert_eq!(result_json.get("content").unwrap()[13].get("content").unwrap()[1].get("type").unwrap(), "ms");
-    }
-    #[test]
-    #[should_panic]
-    fn fail_parse_json() {
-        let file_path = "./assets/data/bad/bad_json.json";
-        let result = deserialize_from_file::<AosjStringModel>(file_path);
-    }
+pub fn deserialize_from_file_str_usj<T:AosjModel>(content: String) -> String {
+    let mut file = NamedTempFile::new().expect("Failed to create temp file");
+    write!(file, "{}", content).expect("Failed to write to temp file");
+    let file_path = file.path().to_str().unwrap();
+    deserialize_from_file_path_usfm::<T>(file_path)
 }

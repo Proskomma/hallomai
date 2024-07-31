@@ -2,7 +2,7 @@ use std::fs::File;
 use std::io::Read;
 use std::collections::BTreeMap;
 use regex::Regex;
-use crate::const_usfm;
+use crate::utils_usfm;
 use crate::model_traits::AosjModel;
 
 #[derive(Debug, PartialEq, Clone)]
@@ -195,8 +195,8 @@ fn make_tag(subclass: &str, matched_bits: Vec<&str>) -> Tag {
     } else {
         full_tag_name = format!("{}{}", tag_name, matched_bits[3]);
     }
-    let char_marker = const_usfm::char_markers();
-    let para_marker = const_usfm::para_markers();
+    let char_marker = utils_usfm::char_markers();
+    let para_marker = utils_usfm::para_markers();
 
     let tag_type: String;
     if char_marker.contains(&tag_name) {
@@ -206,7 +206,7 @@ fn make_tag(subclass: &str, matched_bits: Vec<&str>) -> Tag {
     } else if tag_name == "id" {
         tag_type = "book".to_string();
     } else {
-        tag_type = "".to_string();
+        panic!("Tag not in the specification");
     }
 
     Tag {
@@ -220,10 +220,7 @@ fn make_tag(subclass: &str, matched_bits: Vec<&str>) -> Tag {
 }
 
 
-pub fn deserialize_from_file<T: AosjModel>(input_file_path: &str) -> String {
-    let mut file = File::open(input_file_path).unwrap();
-    let mut content = String::new();
-    file.read_to_string(&mut content).unwrap();
+pub fn deserialize_from_file_usfm<T: AosjModel>(content: String) -> String {
 
     let mut regexes: Vec<(&str, &str, Regex)> = vec![];
     regexes.push(("chapter", r"([\r\n]*\\c[ \t]+(\d+)[ \t\r\n]*)", Regex::new(r"([\r\n]*\\c[ \t]+(\d+)[ \t\r\n]*)").unwrap()));
@@ -516,32 +513,9 @@ fn do_end_tag<T: AosjModel>(model: &mut T, token: Tag, txt: &mut Vec<String>) {
     }
 }
 
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use serde_json::Value;
-    use crate::aosj_string::aosj_string_model::AosjStringModel;
-
-    #[test]
-    fn it_deserialize_usj() {
-
-
-        let file_path = "./assets/usfm/cl.usfm";
-        let result = deserialize_from_file::<AosjStringModel>(file_path);
-        let result_json: Value = serde_json::from_str(&result).unwrap();
-
-        // println!("{:#?}", result_json.get("content").unwrap()[13].get("content"));
-
-        assert_eq!(result_json.get("version").unwrap(), "0.2.1");
-
-
-    }
-    #[test]
-    #[should_panic]
-    fn fail_parse_json() {
-        let file_path = "";
-        let result = deserialize_from_file::<AosjStringModel>(file_path);
-    }
-
+pub fn deserialize_from_file_path_usfm<T:AosjModel>(input_file_path: &str) -> String {
+    let mut file = File::open(input_file_path).unwrap();
+    let mut content = String::new();
+    file.read_to_string(&mut content).unwrap();
+    deserialize_from_file_usfm::<T>(content)
 }

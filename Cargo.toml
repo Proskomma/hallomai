@@ -20,3 +20,6 @@ tempfile = "3.2"
 
 [profile.dev]
 debug = 0
+
+[package.metadata.includedir]
+path = "tests"

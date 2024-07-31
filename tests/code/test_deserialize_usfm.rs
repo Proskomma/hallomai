@@ -1,10 +1,10 @@
-use deserialize_usfm::deserialize_from_file_usfm;
+use deserialize_usfm::deserialize_from_file_path_usfm;
 
 #[test]
 fn it_deserialize_usfm() {
 
-    let file_path = "tests/datas/usfm/cl.usfm";
-    let result = deserialize_from_file_usfm::<AosjStringModel>(file_path);
+    let file_path = "tests/datas/usfm/good/cl.usfm";
+    let result = deserialize_from_file_path_usfm::<AosjStringModel>(file_path);
     let result_json: Value = serde_json::from_str(&result).unwrap();
 
     assert_eq!(result_json.get("version").unwrap(), "3.0");
@@ -17,9 +17,13 @@ fn it_deserialize_usfm() {
 
 }
 
+fn test_deserialize_multiple_usfms() {
+
+}
+
 #[test]
 #[should_panic]
 fn fail_parse_usfm() {
-    let file_path = "tests/datas/usfm/cl_bad.usfm";
-    deserialize_from_file_usfm::<AosjStringModel>(file_path);
+    let file_path = "tests/datas/usfm/bad/cl_bad.usfm";
+    deserialize_from_file_path_usfm::<AosjStringModel>(file_path);
 }

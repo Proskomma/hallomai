@@ -5,6 +5,7 @@ use std::fs::File;
 use std::io::BufReader;
 use serde_json::Value;
 use tempfile::NamedTempFile;
+use std::io::Write;
 use crate::deserialize_usfm::deserialize_from_file_path_usfm;
 use crate::model_traits::AosjModel;
 

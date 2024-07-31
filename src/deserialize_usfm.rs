@@ -206,6 +206,7 @@ fn make_tag(subclass: &str, matched_bits: Vec<&str>) -> Tag {
     } else if tag_name == "id" {
         tag_type = "book".to_string();
     } else {
+        // TODO : make sure to handle all the tags in the future
         panic!("Tag not in the specification");
     }
 

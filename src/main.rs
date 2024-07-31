@@ -25,9 +25,9 @@ mod reg_ex_tests;
 mod utils_usfm;
 
 
-// include!("../tests/code/test_deserialize_usj.rs");
-// include!("../tests/code/test_deserialize_usx.rs");
-// include!("../tests/code/test_deserialize_usfm.rs");
+include!("../tests/code/test_deserialize_usj.rs");
+include!("../tests/code/test_deserialize_usx.rs");
+include!("../tests/code/test_deserialize_usfm.rs");
 
 // extern crate rust_usfm_parser;
 

@@ -1,6 +1,6 @@
 use tempfile::NamedTempFile;
 use std::io::Write;
-use deserialize_usx::deserialize_from_file_usx;
+use deserialize_usx::deserialize_from_file_path_usx;
 
 
 fn create_temp_file(content: &str) -> NamedTempFile {
@@ -35,7 +35,7 @@ fn it_deserialize_usx() {
     let temp_file = create_temp_file(usx_content);
     let file_path = temp_file.path().to_str().unwrap();
 
-    let result = deserialize_from_file_usx::<AosjStringModel>(file_path);
+    let result = deserialize_from_file_path_usx::<AosjStringModel>(file_path);
 
     let result_json: Value = serde_json::from_str(&result).expect("Failed to parse result JSON");
 
@@ -66,5 +66,5 @@ fn fail_parse_usx() {
     let temp_file = create_temp_file(usx_content);
     let file_path = temp_file.path().to_str().unwrap();
 
-    deserialize_from_file_usx::<AosjStringModel>(file_path);
+    deserialize_from_file_path_usx::<AosjStringModel>(file_path);
 }

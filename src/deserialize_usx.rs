@@ -6,6 +6,7 @@ use std::io::BufReader;
 use quick_xml::events::Event;
 use quick_xml::Reader;
 use tempfile::NamedTempFile;
+use std::io::Write;
 use crate::model_traits::AosjModel;
 
 

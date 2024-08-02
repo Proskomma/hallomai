@@ -1,3 +1,5 @@
+use std::fs;
+use std::path::Path;
 use deserialize_usfm::deserialize_from_file_path_usfm;
 
 #[test]
@@ -17,8 +19,18 @@ fn it_deserialize_usfm() {
 
 }
 
+#[test]
 fn test_deserialize_multiple_usfms() {
+    let path = Path::new("tests/datas/usfm/good/");
 
+    for entry in fs::read_dir(path).unwrap() {
+        let entry = entry.unwrap();
+        let path = entry.path();
+
+        if path.is_file() && path.extension().and_then(|s| s.to_str()) == Some("usfm") {
+            deserialize_from_file_path_usfm::<AosjStringModel>(path.to_str().unwrap());
+        }
+    }
 }
 
 #[test]

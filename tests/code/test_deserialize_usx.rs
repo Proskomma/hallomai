@@ -50,6 +50,20 @@ fn it_deserialize_usx() {
 }
 
 #[test]
+fn test_deserialize_multiple_usxs() {
+    let path = Path::new("tests/datas/usx/good/");
+
+    for entry in fs::read_dir(path).unwrap() {
+        let entry = entry.unwrap();
+        let path = entry.path();
+
+        if path.is_file() && path.extension().and_then(|s| s.to_str()) == Some("usx") {
+            deserialize_from_file_path_usfm::<AosjStringModel>(path.to_str().unwrap());
+        }
+    }
+}
+
+#[test]
 #[should_panic]
 fn fail_parse_usx() {
     let usx_content = r#"

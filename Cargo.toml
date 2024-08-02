@@ -14,9 +14,7 @@ quick-xml = "0.36.0"
 #tree-sitter-rust = "0.21.2"
 #rust-usfm-parser = { git = "https://github.com/Proskomma/rust-usfm-parser", version = "0.1.0" }
 regex = "1"
-
-[dev-dependencies]
-tempfile = "3.2"
+tempfile = "3.10.1"
 
 [profile.dev]
 debug = 0

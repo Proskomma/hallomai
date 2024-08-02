@@ -1,0 +1,202 @@
+{
+  "content": [
+    {
+      "code": "MAT",
+      "content": [
+        "41MATGNT92.SFM, Good News Translation, June 2003"
+      ],
+      "marker": "id",
+      "type": "book"
+    },
+    {
+      "content": [
+        "3.0"
+      ],
+      "marker": "usfm",
+      "type": "para"
+    },
+    {
+      "content": [
+        "The Acts of the Apostles"
+      ],
+      "marker": "toc1",
+      "type": "para"
+    },
+    {
+      "content": [
+        "Acts"
+      ],
+      "marker": "toc2",
+      "type": "para"
+    },
+    {
+      "content": [
+        "One of these brothers, Joseph, had become..."
+      ],
+      "marker": "ip",
+      "type": "para"
+    },
+    {
+      "content": [
+        "(50.24)"
+      ],
+      "marker": "ipr",
+      "type": "para"
+    },
+    {
+      "marker": "c",
+      "number": "136",
+      "sid": "MAT 136",
+      "type": "chapter"
+    },
+    {
+      "content": [
+        "Aleph"
+      ],
+      "marker": "qa",
+      "type": "para"
+    },
+    {
+      "content": [],
+      "marker": "b",
+      "type": "para"
+    },
+    {
+      "content": [
+        "God's Love Never Fails"
+      ],
+      "marker": "s1",
+      "type": "para"
+    },
+    {
+      "content": [
+        {
+          "marker": "v",
+          "number": "1",
+          "sid": "MAT 136:1",
+          "type": "verse"
+        },
+        "Praise the ",
+        {
+          "content": [
+            "Lord"
+          ],
+          "marker": "nd",
+          "type": "char"
+        },
+        "! He is good."
+      ],
+      "marker": "q1",
+      "type": "para"
+    },
+    {
+      "content": [
+        "God's love never fails ",
+        {
+          "content": [
+            "Selah",
+            {
+              "caller": "*",
+              "content": [
+                "Note content"
+              ],
+              "marker": "f",
+              "type": "note"
+            }
+          ],
+          "marker": "qs",
+          "type": "char"
+        }
+      ],
+      "marker": "qr",
+      "type": "para"
+    },
+    {
+      "content": [
+        {
+          "marker": "v",
+          "number": "2",
+          "sid": "MAT 136:2",
+          "type": "verse"
+        },
+        "Praise the God of all gods."
+      ],
+      "marker": "q1",
+      "type": "para"
+    },
+    {
+      "content": [
+        "May his glory fill the whole world.",
+        {
+          "marker": "zaln-s",
+          "type": "ms",
+          "x-content": "עֹֽבַדְיָ֑ה",
+          "x-lemma": "עֹבַדְיָה",
+          "x-morph": "He,Np",
+          "x-occurrence": "1",
+          "x-occurrences": "1",
+          "x-strong": "H5662"
+        }
+      ],
+      "marker": "q1",
+      "type": "para"
+    },
+    {
+      "content": [
+        "Amen! Amen!"
+      ],
+      "marker": "qc",
+      "type": "para"
+    },
+    {
+      "content": [
+        "For the director of music. On my stringed instruments."
+      ],
+      "marker": "qd",
+      "type": "para"
+    },
+    {
+      "content": [
+        {
+          "marker": "v",
+          "number": "18",
+          "sid": "MAT 136:18",
+          "type": "verse"
+        },
+        "God's spirit took control of one of them, Amasai, who later became the commander of “The Thirty,” and he called out,"
+      ],
+      "marker": "b",
+      "type": "para"
+    },
+    {
+      "content": [
+        "“David son of Jesse, we are yours!"
+      ],
+      "marker": "qm1",
+      "type": "para"
+    },
+    {
+      "content": [
+        "Success to you and those who help you!"
+      ],
+      "marker": "qm1",
+      "type": "para"
+    },
+    {
+      "content": [
+        "God is on your side.”"
+      ],
+      "marker": "qm1",
+      "type": "para"
+    },
+    {
+      "content": [
+        "David welcomed them and made them officers in his army."
+      ],
+      "marker": "m",
+      "type": "para"
+    }
+  ],
+  "type": "USJ",
+  "version": "0.2.1"
+}

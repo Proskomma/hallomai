@@ -1,0 +1,11 @@
+<usx version="3.0">
+    <book code="OBA" style="id">EN_ULT unfoldingWord Literal Text, abbreviated by Mark</book>
+    <para style="h">Obadiah</para>
+    <para style="toc1">The Book of Obadiah</para>
+    <chapter style="c" number="1" sid="OBA 1"/>
+    <para style="p">
+        <verse style="v" number="1" sid="OBA 1:1"/>
+        <ms style="zaln-s" x-content="עֹֽבַדְיָ֑ה" x-lemma="עֹבַדְיָה" x-morph="He,Np" x-occurrence="1" x-occurrences="1" x-strong="H5662"/>
+        <char style="w" x-occurrence="1" x-occurrences="1">Obadiah</char>
+        <ms style="zaln-e"/>...</para>
+</usx>

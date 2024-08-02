@@ -110,6 +110,11 @@ fn deserialize_from_file_usx<T:AosjModel>(mut reader: Reader<BufReader<File>>) -
                     model.add_milestone(
                         model.get_attributes()
                     )
+                } else if tag_name == "ms" && model.parent_els().last().unwrap().attributes.contains_key("eid") {
+
+                    model.add_milestone(
+                        model.get_attributes()
+                    )
                 }
 
                 model.parent_els().pop();

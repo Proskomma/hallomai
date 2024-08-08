@@ -95,7 +95,7 @@ pub fn serialize_to_usx(usj: Value, output_file_path: &str) {
 }
 
 
-fn write_content(mut content: &Value, mut writer: Writer<BufWriter<File>>) -> Writer<BufWriter<File>> {
+fn write_content(content: &Value, mut writer: Writer<BufWriter<File>>) -> Writer<BufWriter<File>> {
     match content {
         Value::String(text) => {
             writer.write_event(Event::Text(BytesText::new(text.as_str()))).unwrap();

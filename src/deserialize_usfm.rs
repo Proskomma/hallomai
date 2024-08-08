@@ -5,6 +5,14 @@ use regex::Regex;
 use crate::utils_usfm;
 use crate::model_traits::AosjModel;
 
+
+/// # Reads the USFM file and reconstructs it into an AosjModel.
+///
+/// This function processes a USFM file, with all the structs defined.
+/// It reconstructs the file into a model that implements the `AosjModel`
+/// trait.
+
+
 #[derive(Debug, PartialEq, Clone)]
 enum Token {
     Chapter(Chapter),
@@ -25,9 +33,16 @@ struct Printable {
 }
 
 fn make_printable(subclass: &str, matched_bits: Vec<&str>) -> Printable {
+    let mut print_value = matched_bits[0].replace("~", "\u{00a0}");
+    let values: Vec<String> = vec!["\"".to_string(), "\\".to_string()];
+    if values.contains(&print_value) {
+        let value = format!("\\{}", &print_value);
+        print_value = print_value.replace(&print_value, value.as_str());
+    }
+    // println!("{}", print_value);
     Printable {
         subclass: subclass.to_string(),
-        print_value: matched_bits[0].replace("~", "\u{00a0}"),
+        print_value,
     }
 }
 
@@ -197,6 +212,7 @@ fn make_tag(subclass: &str, matched_bits: Vec<&str>) -> Tag {
     }
     let char_marker = utils_usfm::char_markers();
     let para_marker = utils_usfm::para_markers();
+    let note_markers = utils_usfm::note_markers();
 
     let tag_type: String;
     if char_marker.contains(&tag_name) {
@@ -205,9 +221,12 @@ fn make_tag(subclass: &str, matched_bits: Vec<&str>) -> Tag {
         tag_type = "para".to_string();
     } else if tag_name == "id" {
         tag_type = "book".to_string();
+    } else if note_markers.contains(&tag_name) {
+        tag_type = "note".to_string();
     } else {
         // TODO : make sure to handle all the tags in the future
-        panic!("Tag not in the specification");
+        // tag_type = "para".to_string();
+        panic!("Tag not in the specification : {}", tag_name);
     }
 
     Tag {
@@ -235,6 +254,7 @@ pub fn deserialize_from_file_usfm<T: AosjModel>(content: String) -> String {
     regexes.push(("endTag", r"(\\([+]?[a-z\-]+)([1-9]?(-([1-9]))?)[*])", Regex::new(r"(\\([+]?[a-z\-]+)([1-9]?(-([1-9]))?)[*])").unwrap()));
     regexes.push(("startTag", r"(\\([+]?[a-z\-]+)([1-9]?(-([1-9]))?)[ \t]?)", Regex::new(r"(\\([+]?[a-z\-]+)([1-9]?(-([1-9]))?)[ \t]?)").unwrap()));
     regexes.push(("bareSlash", r"(\\)", Regex::new(r"(\\)").unwrap()));
+    // regexes.push(("quote", r#"(")"#, Regex::new(r#"(")"#).unwrap()));
     regexes.push(("eol", r"([ \t]*[\r\n]+[ \t]*)", Regex::new(r"([ \t]*[\r\n]+[ \t]*)").unwrap()));
     regexes.push(("noBreakSpace", r"~", Regex::new(r"~").unwrap()));
     regexes.push(("softLinebreak", r"//", Regex::new(r"//").unwrap()));
@@ -280,6 +300,7 @@ pub fn deserialize_from_file_usfm<T: AosjModel>(content: String) -> String {
     let mut txt: Vec<String> = Vec::new();
     let mut open_para_tags: Vec<Tag> = Vec::new();
     let mut open_char_tags: Vec<Tag> = Vec::new();
+    let mut open_note_tags: Vec<Tag> = Vec::new();
     let mut attributes: BTreeMap<String, String> = BTreeMap::new();
     let mut in_start_char: bool = false;
     let mut in_milestone: bool = false;
@@ -338,6 +359,23 @@ pub fn deserialize_from_file_usfm<T: AosjModel>(content: String) -> String {
                                     }
                                 }
                             }
+                            "note" => {
+                                while open_char_tags.len() > 0 {
+                                    let pop_tag = open_char_tags.pop().unwrap();
+                                    do_end_tag(&mut model, pop_tag, &mut txt);
+                                }
+                                while open_note_tags.len() > 0 {
+                                    let pop_tag = open_note_tags.pop().unwrap();
+                                    do_end_tag(&mut model, pop_tag, &mut txt);
+                                }
+                                open_note_tags.push(t.clone());
+
+                                let marker = t.full_tag_name;
+                                attributes.insert("marker".to_string(), marker);
+                                model.push_element(attributes.clone(), "note".to_string());
+                                model.start_add_note(model.get_attributes());
+                                attributes.clear();
+                            }
                             "book" => {
                                 open_para_tags.push(t.clone());
                             }
@@ -368,6 +406,12 @@ pub fn deserialize_from_file_usfm<T: AosjModel>(content: String) -> String {
                                     }
                                 }
                             }
+                            "note" => {
+                                if !open_note_tags.is_empty() {
+                                    let pop_tag = open_note_tags.pop().unwrap();
+                                    do_end_tag(&mut model, pop_tag, &mut txt);
+                                }
+                            }
                             _ => {}
                         }
                     }
@@ -375,7 +419,6 @@ pub fn deserialize_from_file_usfm<T: AosjModel>(content: String) -> String {
                 }
             }
             Token::Printable(p) => {
-                // println!("{:#?}", p);
 
                 if p.subclass != "eol" {
                     let re = Regex::new(r"[ \t\r\n]+").unwrap();
@@ -507,6 +550,10 @@ fn do_end_tag<T: AosjModel>(model: &mut T, token: Tag, txt: &mut Vec<String>) {
 
                 "char" => {
                     model.end_add_char_marker(txt);
+                }
+
+                "note" => {
+                    model.end_add_note(txt);
                 }
                 _ => {}
             }

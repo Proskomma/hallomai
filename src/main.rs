@@ -28,6 +28,8 @@ mod serialize_to_usj;
 mod serialize_to_usx;
 mod serialize_to_usfm;
 
+use structopt::StructOpt;
+
 
 include!("../tests/code/test_deserialize_usj.rs");
 include!("../tests/code/test_deserialize_usx.rs");
@@ -42,29 +44,103 @@ include!("../tests/code/test_deserialize_usfm.rs");
 // use rust_usfm_parser::USFMParser;
 // use crate::aosj_string::aosj_string_model::AosjStringModel;
 
+#[derive(StructOpt, Debug)]
+#[structopt(name = "usx_tool")]
+struct Opt {
+    /// Input file path
+    #[structopt(short, long)]
+    input: String,
+
+    /// Output file path
+    #[structopt(short, long)]
+    output: String,
+}
+
 
 /// This function initializes the deserialization process for a USX file and
 /// processes it using the `AosjStringModel`.
 fn main() {
 
-    // let input_file_path = "./assets/usx/milestone_attributes.usx";
+    // let opt = Opt::from_args();
+    //
+    // let input_file_path = opt.input;
+    // let output_file_path = opt.output;
+    //
+    // use std::time::Instant;
+    // let now = Instant::now();
+    //
+    // if input_file_path.ends_with(".usx") {
+    //     let model = deserialize_from_file_path_usx::<AosjStringModel>(&input_file_path);
+    //     if output_file_path.ends_with(".json") {
+    //         serialize_to_usj::serialize_to_usj(model, &output_file_path);
+    //     } else if output_file_path.ends_with(".usfm") {
+    //         let temp_output = "temp_output.json";
+    //         let usj = serialize_to_usj::serialize_to_usj(model, temp_output);
+    //         serialize_to_usfm::serialize_to_usfm(usj, &output_file_path);
+    //     } else if output_file_path.ends_with(".usx") {
+    //         let temp_output = "temp_output.json";
+    //         let usj = serialize_to_usj::serialize_to_usj(model, temp_output);
+    //         serialize_to_usx::serialize_to_usx(usj, &output_file_path);
+    //     } else {
+    //         eprintln!("Unsupported output file format for .usx input.");
+    //     }
+    // } else if input_file_path.ends_with(".json") {
+    //     let model = deserialize_from_file_path_usj::<AosjStringModel>(&input_file_path);
+    //     if output_file_path.ends_with(".usx") {
+    //         let temp_output = "temp_output.json";
+    //         let usj = serialize_to_usj::serialize_to_usj(model, temp_output);
+    //         serialize_to_usx::serialize_to_usx(usj, &output_file_path);
+    //     } else if output_file_path.ends_with(".usfm") {
+    //         let temp_output = "temp_output.json";
+    //         let usj = serialize_to_usj::serialize_to_usj(model, temp_output);
+    //         serialize_to_usfm::serialize_to_usfm(usj, &output_file_path);
+    //     } else if output_file_path.ends_with(".json") {
+    //         serialize_to_usj::serialize_to_usj(model, &output_file_path);
+    //     } else {
+    //         eprintln!("Unsupported output file format for .usj input.");        }
+    // } else if input_file_path.ends_with(".usfm") {
+    //     let model = deserialize_from_file_path_usfm::<AosjStringModel>(&input_file_path);
+    //     if output_file_path.ends_with(".json") {
+    //         serialize_to_usj::serialize_to_usj(model, &output_file_path);
+    //     } else if output_file_path.ends_with(".usx") {
+    //         let temp_output = "temp_output.json";
+    //         let usj = serialize_to_usj::serialize_to_usj(model, temp_output);
+    //         serialize_to_usx::serialize_to_usx(usj, &output_file_path);
+    //     } else if output_file_path.ends_with(".usfm") {
+    //         let temp_output = "temp_output.json";
+    //         let usj = serialize_to_usj::serialize_to_usj(model, temp_output);
+    //         serialize_to_usfm::serialize_to_usfm(usj, &output_file_path);
+    //     } else {
+    //         eprintln!("Unsupported output file format for .usfm input.");
+    //     }
+    // } else {
+    //     eprintln!("Unsupported input file format.");
+    // }
+    //
+    // let elapsed = now.elapsed();
+    // println!("Elapsed: {:.2?}", elapsed);
+
+    // pour run le code : cargo run -- --input chemin_vers_le_fichier_d_entrée --output chemin_vers_le_fichier_de_sortie
+
+
+    let input_file_path = "PSA.usx";
     // let input_file_path = "./assets/usj/small.json";
-    let input_file_path = "./assets/usfm/cl.usfm";
+    // let input_file_path = "./assets/usfm/19-PSA.usfm";
 
     if input_file_path.ends_with(".usx") {
         let a = deserialize_from_file_path_usx::<AosjStringModel>(input_file_path);
+        println!("{:#?}", a);
         let d = serialize_to_usj::serialize_to_usj(a, "output_usx_to_usj.json");
         serialize_to_usx::serialize_to_usx(d, "output_usj_to_usx.usx");
-        // println!("{}",d);
     } else if input_file_path.ends_with(".json") {
         let b = deserialize_from_file_path_usj::<AosjStringModel>(input_file_path);
-        // println!("{}",b);
         serialize_to_usj::serialize_to_usj(b, "output_usj.json");
     } else if input_file_path.ends_with(".usfm") {
         let c = deserialize_from_file_path_usfm::<AosjStringModel>(input_file_path);
-        // println!("{}", c);
+        println!("{}", c);
         let f = serialize_to_usj::serialize_to_usj(c, "output_usfm_to_usj.json");
-        serialize_to_usfm::serialize_to_usfm(f, "output_usj_to_usfm.usfm")
+        // serialize_to_usfm::serialize_to_usfm(f.clone(), "output_usj_to_usfm.usfm");
+        // serialize_to_usx::serialize_to_usx(f, "output_usfm_to_usx.usx")
     }
 }
 

@@ -1,0 +1,510 @@
+{
+  "content": [
+    {
+      "code": "TIT",
+      "content": [
+        "tit Unlocked Literal Bible"
+      ],
+      "marker": "id",
+      "type": "book"
+    },
+    {
+      "content": [
+        "usfm"
+      ],
+      "marker": "ide",
+      "type": "para"
+    },
+    {
+      "content": [
+        "Titus"
+      ],
+      "marker": "h",
+      "type": "para"
+    },
+    {
+      "content": [
+        "Poslanica e Titošće"
+      ],
+      "marker": "toc1",
+      "type": "para"
+    },
+    {
+      "content": [
+        "Titošće"
+      ],
+      "marker": "toc2",
+      "type": "para"
+    },
+    {
+      "content": [
+        "Tit"
+      ],
+      "marker": "toc3",
+      "type": "para"
+    },
+    {
+      "content": [
+        "E Titosko lil"
+      ],
+      "marker": "mt",
+      "type": "para"
+    },
+    {
+      "marker": "c",
+      "number": "1",
+      "sid": "TIT 1",
+      "type": "chapter"
+    },
+    {
+      "content": [
+        "E Pavlosko poziv"
+      ],
+      "marker": "s",
+      "type": "para"
+    },
+    {
+      "content": [
+        {
+          "marker": "v",
+          "number": "1",
+          "sid": "TIT 1:1",
+          "type": "verse"
+        },
+        "Akava ramov me, o Pavle, o sluga e Devlesko thaj o apostol e Isuse Hristosko. Me sem bičhaldo te okolen saven o Del losarda te zuravav len ando paćipe thaj te sikavav len te pindžaren o čačipe savo si ugodno e Devlešće.",
+        {
+          "marker": "v",
+          "number": "2",
+          "sid": "TIT 1:2",
+          "type": "verse"
+        },
+        "Godova paćipe thaj o pindžaripe del len nada ando večno trajo savo o Del obećisarda lenđe katar o večnost, a o Del či hohavel.",
+        {
+          "marker": "v",
+          "number": "3",
+          "sid": "TIT 1:3",
+          "type": "verse"
+        },
+        "Ande pravo vrjama objavisardas e manušenđe piro alav kroz o propovedanje savo o Del, amaro Spasitelj, zapovedisardas manđe te propovediv."
+      ],
+      "marker": "p",
+      "type": "para"
+    },
+    {
+      "content": [
+        {
+          "marker": "v",
+          "number": "4",
+          "sid": "TIT 1:4",
+          "type": "verse"
+        },
+        "Ramov e Titošće, mungre čače čhavešće ando zajedničko paćipe:"
+      ],
+      "marker": "p",
+      "type": "para"
+    },
+    {
+      "content": [
+        "Milost thaj miro katar o Del o Dad thaj katar Hristo Isuso, amaro Spasitelj."
+      ],
+      "marker": "p",
+      "type": "para"
+    },
+    {
+      "content": [
+        "E Titošći bući pe Krita"
+      ],
+      "marker": "s",
+      "type": "para"
+    },
+    {
+      "content": [
+        {
+          "marker": "v",
+          "number": "5",
+          "sid": "TIT 1:5",
+          "type": "verse"
+        },
+        "Muklem tut pe Krita pale godova te anes ando redo okova so nas dovršime thaj te pe thana čhos e starešinen ande zajednice sago kaj me naredisardem tuće.",
+        {
+          "marker": "v",
+          "number": "6",
+          "sid": "TIT 1:6",
+          "type": "verse"
+        },
+        "O starešina trubul te avel manuš pale savo naj khanči bilačhe te phenelpe, rom paćivalo jećhe romnjaće, lešće čhavra trubun te aven vernikurja, save či avena došarde palo bezehalo traipe, kaj si bilačhe thaj neposlušne.",
+        {
+          "marker": "v",
+          "number": "7",
+          "sid": "TIT 1:7",
+          "type": "verse"
+        },
+        "Kaj o nadgledniko, sago upravitelj e Devlešće ćherešće, trubul te avel manuš pale savo naj khanči bilačhe te phenelpe, te na gndil samo pe peste, te na avel čingaralo, te na avel matarno, te na avel nasilniko, thaj te na avel sklono palo bilačho dobitko.",
+        {
+          "marker": "v",
+          "number": "8",
+          "sid": "TIT 1:8",
+          "type": "verse"
+        },
+        "A trubul te avel gostoljubivo, te volil o lačhipe, razumno, pravedno, sveto thaj te siles kontrola pe peste.",
+        {
+          "marker": "v",
+          "number": "9",
+          "sid": "TIT 1:9",
+          "type": "verse"
+        },
+        "Trubul zurale te inćarel pe ko čačivalo sikavipe, te šaj te hrabril averen thaj te uveril e protivnikonen ando ispravno sikavipe."
+      ],
+      "marker": "p",
+      "type": "para"
+    },
+    {
+      "content": [
+        {
+          "marker": "v",
+          "number": "10",
+          "sid": "TIT 1:10",
+          "type": "verse"
+        },
+        "Kaj si but neposlušne, brbljivcurja, thaj hohavne, osobito maškar okola save sikaven palo obrezanje.",
+        {
+          "marker": "v",
+          "number": "11",
+          "sid": "TIT 1:11",
+          "type": "verse"
+        },
+        "Lenđe trubul o muj te phandvelpe, kaj zbog o bilačho dobitko upropastin e saste familijen gajda kaj sikaven okova so či trubul.",
+        {
+          "marker": "v",
+          "number": "12",
+          "sid": "TIT 1:12",
+          "type": "verse"
+        },
+        "Jek katar lende, vi lengo korkoro proroko, phendas: “E manuša katar e Krita si uvek hohavne, opake zveri, thaj bibućarne handžvale po habe.”",
+        {
+          "marker": "v",
+          "number": "13",
+          "sid": "TIT 1:13",
+          "type": "verse"
+        },
+        "Godova si čačo svedočanstvo. Pale godova strogo kuš len, te aven saste ando paćipe,",
+        {
+          "marker": "v",
+          "number": "14",
+          "sid": "TIT 1:14",
+          "type": "verse"
+        },
+        "thaj te majbut či zanosin pe e židovske paramičenca thaj e naredbenca katar okola save bolden e dume e čačimašće."
+      ],
+      "marker": "p",
+      "type": "para"
+    },
+    {
+      "content": [
+        {
+          "marker": "v",
+          "number": "15",
+          "sid": "TIT 1:15",
+          "type": "verse"
+        },
+        "E čisto manušenđe e bezehendar si sa čisto, a okolenđe save si melale e bezehendar thaj e bipaćivalenđe khanči naj čisto, nego si vi lenđi gođi thaj vi lenđi savest melali.",
+        {
+          "marker": "v",
+          "number": "16",
+          "sid": "TIT 1:16",
+          "type": "verse"
+        },
+        "Tvrdin kaj pindžaren e Devles, ali godova či dokažin pire delenca. Von si odvratne, nepokorne thaj naj sposobne te ćeren bilo savo lačho delo."
+      ],
+      "marker": "p",
+      "type": "para"
+    },
+    {
+      "marker": "c",
+      "number": "2",
+      "sid": "TIT 2",
+      "type": "chapter"
+    },
+    {
+      "content": [
+        "Čačo sikavipe"
+      ],
+      "marker": "s",
+      "type": "para"
+    },
+    {
+      "content": [
+        {
+          "marker": "v",
+          "number": "1",
+          "sid": "TIT 2:1",
+          "type": "verse"
+        },
+        "A tu sićar savoren te složinpe e ispravno sikavipeja:",
+        {
+          "marker": "v",
+          "number": "2",
+          "sid": "TIT 2:2",
+          "type": "verse"
+        },
+        "e purane manušen sićar te aven staložene, dostojne poštuipe, razumne, ispravne ando paćipe, ande ljubav, thaj ando strpljenje.",
+        {
+          "marker": "v",
+          "number": "3",
+          "sid": "TIT 2:3",
+          "type": "verse"
+        },
+        "Isto gajda, sikav e purane manušnjen te ponašinpe pobožno, te na ogovorin thaj te na aven matarne. Nego majlačhe te sikaven okova so si lačhe.",
+        {
+          "marker": "v",
+          "number": "4",
+          "sid": "TIT 2:4",
+          "type": "verse"
+        },
+        "Neka sikaven e majterne manušnjen te volin pire romen thaj pire čhavren,",
+        {
+          "marker": "v",
+          "number": "5",
+          "sid": "TIT 2:5",
+          "type": "verse"
+        },
+        "te aven razumne, čiste ilenca, vredne domaćice, lačhe, poslušne pire romenđe, te či ćerel pe bilačhe svato pale Devlesko alav."
+      ],
+      "marker": "p",
+      "type": "para"
+    },
+    {
+      "content": [
+        {
+          "marker": "v",
+          "number": "6",
+          "sid": "TIT 2:6",
+          "type": "verse"
+        },
+        "Isto gajda, e terne čhaven ohrabrisar te aven razumne.",
+        {
+          "marker": "v",
+          "number": "7",
+          "sid": "TIT 2:7",
+          "type": "verse"
+        },
+        "Ande sa av lenđe lačho primer gajda kaj ćereja e lačhe delurja. Ande okova so sikaves av iskreno thaj ozbiljno.",
+        {
+          "marker": "v",
+          "number": "8",
+          "sid": "TIT 2:8",
+          "type": "verse"
+        },
+        "Neka ćiro sikavipe avel gajda ispravno te okola save protivinpe tuće ladžavon kaj naj len so bilačhe te phenen pale amende.",
+        {
+          "marker": "v",
+          "number": "9",
+          "sid": "TIT 2:9",
+          "type": "verse"
+        },
+        "E roburja ande sa moraš te pokorinpe pire gospodarenđe! Neka ugodin lenđe thaj nek či bolden lenđe o alav,",
+        {
+          "marker": "v",
+          "number": "10",
+          "sid": "TIT 2:10",
+          "type": "verse"
+        },
+        "neka či čoren lendar, nego neka sikaven kaj šaj te paćalpe lenđe, te o sikavipe e Devlesko, amare Spasiteljesko, ande sa avel prihvatime."
+      ],
+      "marker": "p",
+      "type": "para"
+    },
+    {
+      "content": [
+        {
+          "marker": "v",
+          "number": "11",
+          "sid": "TIT 2:11",
+          "type": "verse"
+        },
+        "Kaj, pale sa e manuša o Del sikadas piri milost, savi anel o spasenje.",
+        {
+          "marker": "v",
+          "number": "12",
+          "sid": "TIT 2:12",
+          "type": "verse"
+        },
+        "E milost sikavel men te odrekni men katar o bezbožnost thaj akale themešće želje, te ande akava them trais razumne, pravedne thaj pobožne",
+        {
+          "marker": "v",
+          "number": "13",
+          "sid": "TIT 2:13",
+          "type": "verse"
+        },
+        "dok ažućaras e Bahtali nada thaj te ande slava pojavilpe amaro baro Del thaj Spasitelj, o Isus Hrist.",
+        {
+          "marker": "v",
+          "number": "14",
+          "sid": "TIT 2:14",
+          "type": "verse"
+        },
+        "Vo korkoro pes dijas pale amende te otkupil amen katar svako bezakonje thaj ćerel amen te avas čiste pale peste, thaj them savo pripadil samo lešće, savo uvek trudilpe te ćerel lačhe delurja."
+      ],
+      "marker": "p",
+      "type": "para"
+    },
+    {
+      "content": [
+        {
+          "marker": "v",
+          "number": "15",
+          "sid": "TIT 2:15",
+          "type": "verse"
+        },
+        "Sa akava motho! Ohrabrisar thaj opomeni ande sa o autoriteto! Thaj na muk te khonik preziril tut."
+      ],
+      "marker": "p",
+      "type": "para"
+    },
+    {
+      "marker": "c",
+      "number": "3",
+      "sid": "TIT 3",
+      "type": "chapter"
+    },
+    {
+      "content": [
+        "Sar trubul te trais thaj te lamen sama"
+      ],
+      "marker": "s",
+      "type": "para"
+    },
+    {
+      "content": [
+        {
+          "marker": "v",
+          "number": "1",
+          "sid": "TIT 3:1",
+          "type": "verse"
+        },
+        "Stalno de gođi e vernikonen kaj trubun te pokorinpe e šorvalenđe thaj okolenđe save si pe vlast. Phen lenđe kaj trubun te čhon kan lende thaj te aven spremne pale svako lačho delo.",
+        {
+          "marker": "v",
+          "number": "2",
+          "sid": "TIT 3:2",
+          "type": "verse"
+        },
+        "Phen lenđe te či ćeren bilačhe svato pale khonikaste. Neka či hanpe thaj neka uvek aven blage thaj but ljubazne prema savorende.",
+        {
+          "marker": "v",
+          "number": "3",
+          "sid": "TIT 3:3",
+          "type": "verse"
+        },
+        "Kaj vi amen samas varekana nerazumne, neposlušne thaj zavedime. Robuisardam e razne požudenđe thaj e svako vrsno užitkonenđe. Trajisarasas ando bilačhipe thaj ande zavist, mrzanas amen thaj amen mrzisarasas avren.",
+        {
+          "marker": "v",
+          "number": "4",
+          "sid": "TIT 3:4",
+          "type": "verse"
+        },
+        "Ali askal o Del, amaro Spasitelj, sikadas amenđe piro lačhipe thaj piri ljubav prema e manuša.",
+        {
+          "marker": "v",
+          "number": "5",
+          "sid": "TIT 3:5",
+          "type": "verse"
+        },
+        "O Del spasisarda men, na zbog amare lačhe delurja save ćerdam, nego zbog piro milosrđe. Thoda men katar o bezeh thaj dija men te bijandivas ande nevo trajo po Sveto Duho",
+        {
+          "marker": "v",
+          "number": "6",
+          "sid": "TIT 3:6",
+          "type": "verse"
+        },
+        "saves obilno izlisardas pe amende kroz o Isus Hristo, amaro Spasitelj.",
+        {
+          "marker": "v",
+          "number": "7",
+          "sid": "TIT 3:7",
+          "type": "verse"
+        },
+        "Prekal lešći milost sam opravidime anglo Del, te šaj postanisaras naslednikurja ando večno trajo savešće nadimen.",
+        {
+          "marker": "v",
+          "number": "8",
+          "sid": "TIT 3:8",
+          "type": "verse"
+        },
+        "Sa so phendem tuće si čačipe. Thaj me kamav te godova čvrsto tvrdis, te okola save paćaine e Devlešće posvetinpe gajda kaj ćerena lačhe delurja. Godova si lačhe thaj korisno pale sa e manuša.",
+        {
+          "marker": "v",
+          "number": "9",
+          "sid": "TIT 3:9",
+          "type": "verse"
+        },
+        "Le tut majdur katar e dile rasprave thaj katar o rodoslovlja katar e prepirke thaj katar e čingara palo Zakono, kaj si beskorisne thaj bezvredne.",
+        {
+          "marker": "v",
+          "number": "10",
+          "sid": "TIT 3:10",
+          "type": "verse"
+        },
+        "E manušes savo anel razdor opomenisar jekhar, pa duvar, a ako nastavil godoleja le tut lestar majdur,",
+        {
+          "marker": "v",
+          "number": "11",
+          "sid": "TIT 3:11",
+          "type": "verse"
+        },
+        "kaj tu džanes kaj si kasavo manuš rumome thaj ćerel bezeh. Vo korkoro pes osudil."
+      ],
+      "marker": "p",
+      "type": "para"
+    },
+    {
+      "content": [
+        "E Pavlešće završne alava thaj pozdrav"
+      ],
+      "marker": "s",
+      "type": "para"
+    },
+    {
+      "content": [
+        {
+          "marker": "v",
+          "number": "12",
+          "sid": "TIT 3:12",
+          "type": "verse"
+        },
+        "Kana bičhalava tute e Arteme ili e Tihiko, potrudisar tut te aves mande ando Nikopolj, kaj odlučisardem te ivendiv okote.",
+        {
+          "marker": "v",
+          "number": "13",
+          "sid": "TIT 3:13",
+          "type": "verse"
+        },
+        "Potrudisar tut te pomognis e advokatošće e Zinošće thaj e Apološće ande sa so trubun palo drom, sar khanči či falisardasas lenđe!",
+        {
+          "marker": "v",
+          "number": "14",
+          "sid": "TIT 3:14",
+          "type": "verse"
+        },
+        "A amare manuša trubun te posvetin pe gajda kaj ćeren lačhe delurja, kaj god si čači potreba, sar či aviline sas bibućarne."
+      ],
+      "marker": "p",
+      "type": "para"
+    },
+    {
+      "content": [
+        {
+          "marker": "v",
+          "number": "15",
+          "sid": "TIT 3:15",
+          "type": "verse"
+        },
+        "Pozdravin tut savora save si manca. Pozdravisar okolen save volin amen ando paćipe. Milost tumenca savorenca."
+      ],
+      "marker": "p",
+      "type": "para"
+    }
+  ],
+  "type": "USJ",
+  "version": "3.0"
+}

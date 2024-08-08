@@ -15,6 +15,7 @@ quick-xml = "0.36.0"
 #rust-usfm-parser = { git = "https://github.com/Proskomma/rust-usfm-parser", version = "0.1.0" }
 regex = "1"
 tempfile = "3.10.1"
+structopt = "0.3.26"
 
 [profile.dev]
 debug = 0

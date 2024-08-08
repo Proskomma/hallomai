@@ -31,8 +31,6 @@ pub fn deserialize_from_file_str_usx<T:AosjModel>(content: String) -> String {
 }
 
 fn deserialize_from_file_usx<T:AosjModel>(mut reader: Reader<BufReader<File>>) -> String {
-    // let mut reader = Reader::from_file(input_file_path).unwrap();
-    // reader.config_mut().trim_text(true);
 
     let mut buf = Vec::new();
     let mut txt = Vec::new();
@@ -85,6 +83,13 @@ fn deserialize_from_file_usx<T:AosjModel>(mut reader: Reader<BufReader<File>>) -
             }
 
             Ok(Event::Empty(el)) => {
+                clean_whitespace(&mut txt);
+                // for i in txt.pop() {
+                //     if i.contains("\n") {
+                //         let j = i.replace("\n", "");
+                //         txt.push(j);
+                //     }
+                // }
                 model.add_string_to_in_para(&mut txt);
                 let mut attributes: BTreeMap<String, String> = BTreeMap::new();
                 for att in el.attributes() {
@@ -130,6 +135,14 @@ fn deserialize_from_file_usx<T:AosjModel>(mut reader: Reader<BufReader<File>>) -
 
                 let tag_name = model.parent_els().last().unwrap().tag_name.clone();
 
+                clean_whitespace(&mut txt);
+                // for i in txt.pop() {
+                //     if i.contains("\n") {
+                //         let j = i.replace("\n", "");
+                //         txt.push(j);
+                //     }
+                // }
+
                 if tag_name == "para" {
                     model.add_string_to_in_para(
                         &mut txt
@@ -161,5 +174,13 @@ fn deserialize_from_file_usx<T:AosjModel>(mut reader: Reader<BufReader<File>>) -
             _ => {}
         }
         buf.clear();
+    }
+}
+
+
+fn clean_whitespace(txt: &mut Vec<String>) {
+    for i in txt.iter_mut() {
+        *i = i.replace("\n", " ").replace("\t", " ").trim().to_string();
+        *i = i.split_whitespace().collect::<Vec<&str>>().join(" ");
     }
 }

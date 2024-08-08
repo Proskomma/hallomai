@@ -60,6 +60,7 @@ pub fn para_markers() -> Vec<String> {
         "po".to_string(),
         "pr".to_string(),
         "cls".to_string(),
+        "cl".to_string(),
         "pmo".to_string(),
         "pm".to_string(),
         "pmc".to_string(),
@@ -115,5 +116,14 @@ pub fn para_markers() -> Vec<String> {
         "sp".to_string(),
         "sd".to_string(),
         "b".to_string(),
+    ]
+}
+
+
+pub fn note_markers() -> Vec<String> {
+    vec![
+        "f".to_string(),
+        "ft".to_string(),
+        "fqa".to_string(),
     ]
 }

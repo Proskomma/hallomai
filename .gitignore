@@ -1,2 +1,5 @@
 target
 output
+*.json
+*.usfm
+*.usx

@@ -6,10 +6,9 @@ use quick_xml::events::{Event, BytesEnd, BytesStart, BytesText};
 use quick_xml::writer::Writer;
 use std::io::BufWriter;
 
-pub fn serialize_to_usx(usj: Value, output_file_path: &str) {
-    let file = File::create(output_file_path).expect("Unable to create file");
+pub fn serialize_to_usx(usj: Value) -> String {
 
-    let mut writer = Writer::new_with_indent(BufWriter::new(file), b' ', 4);
+    let mut writer = Writer::new_with_indent(BufWriter::new(Vec::new()), b' ', 4);
 
     if let Some(version) = usj.get("version").and_then(|v| v.as_str()) {
         let usx_start = BytesStart::new("usx");
@@ -92,10 +91,14 @@ pub fn serialize_to_usx(usj: Value, output_file_path: &str) {
         }
     }
     writer.write_event(Event::End(BytesEnd::new("usx"))).unwrap();
+    let buffer = writer.into_inner().into_inner().expect("Failed to retrieve buffer");
+
+    let output_string = String::from_utf8(buffer).expect("Failed to convert buffer to string");
+    output_string
 }
 
 
-fn write_content(content: &Value, mut writer: Writer<BufWriter<File>>) -> Writer<BufWriter<File>> {
+fn write_content(content: &Value, mut writer: Writer<BufWriter<Vec<u8>>>) -> Writer<BufWriter<Vec<u8>>> {
     match content {
         Value::String(text) => {
             writer.write_event(Event::Text(BytesText::new(text.as_str()))).unwrap();

@@ -39,7 +39,6 @@ fn make_printable(subclass: &str, matched_bits: Vec<&str>) -> Printable {
         let value = format!("\\{}", &print_value);
         print_value = print_value.replace(&print_value, value.as_str());
     }
-    // println!("{}", print_value);
     Printable {
         subclass: subclass.to_string(),
         print_value,
@@ -254,7 +253,7 @@ pub fn deserialize_from_file_usfm<T: AosjModel>(content: String) -> String {
     regexes.push(("endTag", r"(\\([+]?[a-z\-]+)([1-9]?(-([1-9]))?)[*])", Regex::new(r"(\\([+]?[a-z\-]+)([1-9]?(-([1-9]))?)[*])").unwrap()));
     regexes.push(("startTag", r"(\\([+]?[a-z\-]+)([1-9]?(-([1-9]))?)[ \t]?)", Regex::new(r"(\\([+]?[a-z\-]+)([1-9]?(-([1-9]))?)[ \t]?)").unwrap()));
     regexes.push(("bareSlash", r"(\\)", Regex::new(r"(\\)").unwrap()));
-    // regexes.push(("quote", r#"(")"#, Regex::new(r#"(")"#).unwrap()));
+    regexes.push(("quote", r#"(")"#, Regex::new(r#"(")"#).unwrap()));
     regexes.push(("eol", r"([ \t]*[\r\n]+[ \t]*)", Regex::new(r"([ \t]*[\r\n]+[ \t]*)").unwrap()));
     regexes.push(("noBreakSpace", r"~", Regex::new(r"~").unwrap()));
     regexes.push(("softLinebreak", r"//", Regex::new(r"//").unwrap()));
@@ -285,7 +284,7 @@ pub fn deserialize_from_file_usfm<T: AosjModel>(content: String) -> String {
                     "attribute" | "defaultAttribute" => Token::Attribute(make_attribute(subclass, matched_bits)),
                     "emptyMilestone" | "startMilestoneTag" | "endMilestoneTag" => Token::Milestone(make_milestone(subclass, matched_bits)),
                     "startTag" | "endTag" => Token::Tag(make_tag(subclass, matched_bits)),
-                    "bareSlash" | "eol" | "noBreakSpace" | "softLinebreak" | "wordLike" | "lineSpace" | "punctuation" | "unknown" => Token::Printable(make_printable(subclass, matched_bits)),
+                    "bareSlash" | "quote" | "eol" | "noBreakSpace" | "softLinebreak" | "wordLike" | "lineSpace" | "punctuation" | "unknown" => Token::Printable(make_printable(subclass, matched_bits)),
                     _ => Token::Printable(make_bad(subclass, matched_bits)),
                 };
 

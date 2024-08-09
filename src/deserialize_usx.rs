@@ -2,13 +2,13 @@
 
 use std::collections::BTreeMap;
 use std::fs::File;
-use std::io::BufReader;
+use std::io::{BufReader, Cursor, Seek};
 use quick_xml::events::Event;
 use quick_xml::Reader;
-use tempfile::NamedTempFile;
+use tempfile::{NamedTempFile, tempfile};
 use std::io::Write;
+use regex::Regex;
 use crate::model_traits::AosjModel;
-
 
 
 /// # Reads the USX file and reconstructs it into an AosjModel.
@@ -17,24 +17,33 @@ use crate::model_traits::AosjModel;
 /// content and reconstructing it into a model that implements the `AosjModel`
 /// trait. It handles different types of XML events such as start tags, end tags,
 /// empty elements, and text nodes.
-pub fn deserialize_from_file_path_usx<T:AosjModel>(input_file_path: &str) -> String {
-    let mut reader = Reader::from_file(input_file_path).expect("Unable to open file");
+// pub fn deserialize_from_file_path_usx<T:AosjModel>(input_file_path: &str) -> String {
+//     let mut reader = Reader::from_file(input_file_path).expect("Unable to open file");
+//     reader.config_mut().trim_text(true);
+//     deserialize_from_file_usx::<T>(reader)
+// }
+//
+// pub fn deserialize_from_file_str_usx<T:AosjModel>(content: String) -> String {
+//     let mut file = NamedTempFile::new().expect("Failed to create temp file");
+//     write!(file, "{}", content).expect("Failed to write to temp file");
+//     let file_path = file.path().to_str().unwrap();
+//     deserialize_from_file_path_usx::<T>(file_path)
+// }
+
+pub fn deserialize_from_file_usx<T:AosjModel>(input_string: String) -> String {
+
+    let mut temp_file = tempfile().expect("Failed to create temp file");
+    temp_file.write_all(input_string.as_bytes()).expect("Failed to write to temp file");
+    temp_file.seek(std::io::SeekFrom::Start(0)).expect("Failed to seek to start of file");
+    let br: BufReader<File> = BufReader::new(temp_file);
+
+    let mut reader = Reader::from_reader(br);
     reader.config_mut().trim_text(true);
-    deserialize_from_file_usx::<T>(reader)
-}
-
-pub fn deserialize_from_file_str_usx<T:AosjModel>(content: String) -> String {
-    let mut file = NamedTempFile::new().expect("Failed to create temp file");
-    write!(file, "{}", content).expect("Failed to write to temp file");
-    let file_path = file.path().to_str().unwrap();
-    deserialize_from_file_path_usx::<T>(file_path)
-}
-
-fn deserialize_from_file_usx<T:AosjModel>(mut reader: Reader<BufReader<File>>) -> String {
 
     let mut buf = Vec::new();
     let mut txt = Vec::new();
 
+    let mut values = Regex::new(r#"(["\\])"#).unwrap();
     let mut model = T::new();
 
     loop {
@@ -84,12 +93,7 @@ fn deserialize_from_file_usx<T:AosjModel>(mut reader: Reader<BufReader<File>>) -
 
             Ok(Event::Empty(el)) => {
                 clean_whitespace(&mut txt);
-                // for i in txt.pop() {
-                //     if i.contains("\n") {
-                //         let j = i.replace("\n", "");
-                //         txt.push(j);
-                //     }
-                // }
+
                 model.add_string_to_in_para(&mut txt);
                 let mut attributes: BTreeMap<String, String> = BTreeMap::new();
                 for att in el.attributes() {
@@ -126,8 +130,10 @@ fn deserialize_from_file_usx<T:AosjModel>(mut reader: Reader<BufReader<File>>) -
             }
 
             Ok(Event::Text(el)) => {
+                let mut value = el.unescape().unwrap().into_owned();
+                let new_value = values.replace_all(value.as_str(), "\\$1");
                 if model.parent_els().len()>1 {
-                    txt.push(el.unescape().unwrap().into_owned());
+                    txt.push(new_value.to_string());
                 }
             }
 
@@ -136,12 +142,6 @@ fn deserialize_from_file_usx<T:AosjModel>(mut reader: Reader<BufReader<File>>) -
                 let tag_name = model.parent_els().last().unwrap().tag_name.clone();
 
                 clean_whitespace(&mut txt);
-                // for i in txt.pop() {
-                //     if i.contains("\n") {
-                //         let j = i.replace("\n", "");
-                //         txt.push(j);
-                //     }
-                // }
 
                 if tag_name == "para" {
                     model.add_string_to_in_para(

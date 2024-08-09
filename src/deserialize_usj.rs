@@ -71,7 +71,7 @@ fn read_content<T:AosjModel>(model: &mut T, object: &Value) {
 }
 
 
-fn deserialize_from_file_usj<T:AosjModel>(json: Value) -> String {
+pub fn deserialize_from_file_usj<T:AosjModel>(json: Value) -> String {
 
     let mut model = T::new();
 
@@ -136,5 +136,5 @@ pub fn deserialize_from_file_str_usj<T:AosjModel>(content: String) -> String {
     let mut file = NamedTempFile::new().expect("Failed to create temp file");
     write!(file, "{}", content).expect("Failed to write to temp file");
     let file_path = file.path().to_str().unwrap();
-    deserialize_from_file_path_usfm::<T>(file_path)
+    deserialize_from_file_path_usj::<T>(file_path)
 }

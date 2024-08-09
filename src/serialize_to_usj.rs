@@ -4,7 +4,7 @@ use std::io::Write;
 use serde_json::{to_string_pretty, Value};
 
 
-pub fn serialize_to_usj(mut content: String, output_file_path: &str) -> Value {
+pub fn serialize_to_usj(mut content: String) -> Value {
     let mut json_value: Value = serde_json::from_str(content.as_mut_str()).expect("Invalid JSON string");
     if let Value::Object(ref mut map) = json_value {
         map.insert("type".to_string(), Value::String("USJ".to_string()));

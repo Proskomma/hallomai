@@ -68,7 +68,7 @@ fn read_content<T:AosjModel>(model: &mut T, object: &Value) {
 }
 
 
-fn deserialize_from_file_usj<T:AosjModel>(json: Value) -> String {
+pub fn deserialize_from_file_usj<T:AosjModel>(json: Value) -> String {
 
     let mut model = T::new();
 

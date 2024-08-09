@@ -2,13 +2,10 @@
 
 use serde_json::Value;
 use std::fs::File;
-use std::io::{BufReader, BufWriter, Write};
+use std::io::{BufWriter, Write};
 
-pub fn serialize_to_usfm(usj: Value, output_file_path: &str) -> String {
-    // let file = File::create(output_file_path).expect("Unable to create file");
-    let mut writer: BufWriter<Vec<u8>> = BufWriter::new(Vec::new());
-    let mut writer: BufReader<Vec<u8>> = BufReader::new(Vec::new());
-    // let mut writer = String::new();
+pub fn serialize_to_usfm(usj: Value) -> String {
+    let mut writer = BufWriter::new(Vec::new());
 
     if let Some(version) = usj.get("version").and_then(|v| v.as_str()) {
         writeln!(writer, "\\usfm {}", version).unwrap();
@@ -50,7 +47,6 @@ pub fn serialize_to_usfm(usj: Value, output_file_path: &str) -> String {
     }
     let buffer = writer.into_inner().expect("Failed to retrieve buffer");
 
-    // Convert the Vec<u8> to a String
     let output_string = String::from_utf8(buffer).expect("Failed to convert buffer to string");
     output_string
 }
@@ -82,9 +78,20 @@ fn write_content(content: &Value, writer: &mut BufWriter<Vec<u8>>, in_char: bool
                             write_content(value, writer, true);
                         }
                     }
-                    if let Some(default) = obj.get("default").and_then(|d| d.as_str()) {
-                        write!(writer, "|{} ", default).unwrap();
+
+                    if obj.get("marker").and_then(|d| d.as_str()) == Some("w") {
+                        if let Some(default) = obj.get("default").and_then(|d| d.as_str()) {
+                            write!(writer, "|{} ", default).unwrap();
+                        } else {
+                            write!(writer, " | ").unwrap();
+                            for (key, value) in obj.iter() {
+                                if key != "type" && key != "marker" && key != "content" && key != "default" {
+                                    write!(writer, "{}={}", key, value).unwrap();
+                                }
+                            }
+                        }
                     }
+
                     for (key, value) in obj.iter() {
                         if key != "type" && key != "marker" && key != "content" && key != "default"{
                             write!(writer, r"{}={} ", key, value).unwrap();

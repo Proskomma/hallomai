@@ -1,11 +1,14 @@
 #![allow(dead_code)]
 
+use std::any::{Any, type_name_of_val};
 use std::collections::BTreeMap;
 use std::fs::File;
 use std::io::BufReader;
 use serde_json::Value;
 use tempfile::NamedTempFile;
 use std::io::Write;
+use std::ops::Index;
+use regex::Regex;
 use crate::deserialize_usfm::deserialize_from_file_path_usfm;
 use crate::model_traits::AosjModel;
 
@@ -17,9 +20,11 @@ use crate::model_traits::AosjModel;
 
 fn read_content<T:AosjModel>(model: &mut T, object: &Value) {
     let mut txt: Vec<String> = Vec::new();
+    let mut values = Regex::new(r#"(["\\])"#).unwrap();
     match object {
         Value::String(text) => {
-            txt.push(text.to_string());
+            let new_value = values.replace_all(text.as_str(), "\\$1");
+            txt.push(new_value.to_string());
         }
         Value::Object(obj) => {
             let mut attributes: BTreeMap<String, String> = BTreeMap::new();

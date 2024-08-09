@@ -97,7 +97,7 @@ fn main() {
             eprintln!("Unsupported output file format for .usx input.");
         }
     } else if input_file_path.ends_with("json") {
-        let model = deserialize_from_file_usj::<AosjStringModel>(to_value(content).unwrap());
+        let model = deserialize_from_file_usj::<AosjStringModel>(serde_json::from_str(content.as_str()).unwrap());
         if output == "usx" {
             let usj = serialize_to_usj::serialize_to_usj(model);
             let usx = serialize_to_usx::serialize_to_usx(usj);
@@ -134,7 +134,8 @@ fn main() {
     // let elapsed = now.elapsed();
     // println!("Elapsed: {:.2?}", elapsed);
 
-    // pour run le code : cargo run -- --input chemin_vers_le_fichier_d_entrée --output chemin_vers_le_fichier_de_sortie
+
+    // pour run le code : cargo run -- --input chemin_vers_le_fichier_d_entrée --output extension_fichier_de_sortie>nom_du_fichier_de_sortie
 
 
     // // let input_file_path = "PSA.usx";

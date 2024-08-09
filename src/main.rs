@@ -62,13 +62,6 @@ struct Opt {
     output: String,
 }
 
-fn test_roundtrips() {
-
-}
-
-fn transform(input_file_path, output) {
-
-}
 /// This function initializes the deserialization process for a USX file and
 /// processes it using the `AosjStringModel`.
 fn main() {

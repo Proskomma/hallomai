@@ -14,7 +14,6 @@
 
 #![allow(dead_code)]
 
-use serde_json::to_value;
 use wasm_bindgen::prelude::*;
 mod model_traits;
 mod aosj_string;

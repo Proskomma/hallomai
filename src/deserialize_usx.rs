@@ -1,12 +1,9 @@
 #![allow(dead_code)]
 
 use std::collections::BTreeMap;
-use std::fs::File;
-use std::io::{BufReader, Seek};
+use std::io::{BufReader, Cursor};
 use quick_xml::events::Event;
 use quick_xml::Reader;
-use tempfile::tempfile;
-use std::io::Write;
 use regex::Regex;
 use crate::model_traits::AosjModel;
 
@@ -19,11 +16,10 @@ use crate::model_traits::AosjModel;
 /// empty elements, and text nodes.
 pub fn deserialize_from_file_usx<T:AosjModel>(input_string: String) -> String {
 
-    let mut temp_file = tempfile().expect("Failed to create temp file");
-    temp_file.write_all(input_string.as_bytes()).expect("Failed to write to temp file");
-    temp_file.seek(std::io::SeekFrom::Start(0)).expect("Failed to seek to start of file");
-    let br: BufReader<File> = BufReader::new(temp_file);
+    let input_bytes = input_string.as_bytes();
+    let cursor = Cursor::new(input_bytes);
 
+    let br: BufReader<Cursor<&[u8]>> = BufReader::new(cursor);
     let mut reader = Reader::from_reader(br);
     reader.config_mut().trim_text(true);
 

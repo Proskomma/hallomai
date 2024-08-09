@@ -81,6 +81,16 @@ async function run() {
 run();
 ```
 
+### Benchmarks in Wasm (in a js code)
+
+#### From the USFM of the book of "Song of Songs"
+
+![song_of_songs_benchmark](./assets/images/song_of_songs_benchmark.png)
+
+#### From the USFM of the book of "Psalms"
+
+![song_of_songs_benchmark](./assets/images/psalms_benchmark.png)
+
 ## Building for WebAssembly
 
 To build Hallomai for WebAssembly:

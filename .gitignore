@@ -1,6 +1,5 @@
 target
 output
-pkg
 *.json
 *.usfm
 *.usx

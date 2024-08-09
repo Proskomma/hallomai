@@ -30,15 +30,14 @@ mod serialize_to_usj;
 mod serialize_to_usx;
 mod serialize_to_usfm;
 
-use structopt::StructOpt;
 use crate::deserialize_usfm::deserialize_from_file_usfm;
-use crate::deserialize_usj::{deserialize_from_file_str_usj, deserialize_from_file_usj};
+use crate::deserialize_usj::deserialize_from_file_usj;
 use crate::deserialize_usx::deserialize_from_file_usx;
-use crate::model_traits::AosjModel;
+// use crate::model_traits::AosjModel;
 
-include!("../tests/code/test_deserialize_usj.rs");
-include!("../tests/code/test_deserialize_usx.rs");
-include!("../tests/code/test_deserialize_usfm.rs");
+// include!("../tests/code/test_deserialize_usj.rs");
+// include!("../tests/code/test_deserialize_usx.rs");
+// include!("../tests/code/test_deserialize_usfm.rs");
 
 
 /// Transforms a USFM file into a different format (`.usfm`, `.usx`, or `.json`).

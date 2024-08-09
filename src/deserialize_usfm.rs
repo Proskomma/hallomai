@@ -1,5 +1,3 @@
-use std::fs::File;
-use std::io::Read;
 use std::collections::BTreeMap;
 use regex::Regex;
 use crate::utils_usfm;
@@ -301,7 +299,6 @@ pub fn deserialize_from_file_usfm<T: AosjModel>(content: String) -> String {
     let mut open_char_tags: Vec<Tag> = Vec::new();
     let mut open_note_tags: Vec<Tag> = Vec::new();
     let mut attributes: BTreeMap<String, String> = BTreeMap::new();
-    let mut in_start_char: bool = false;
     let mut in_milestone: bool = false;
 
     for token in tokens {
@@ -334,7 +331,6 @@ pub fn deserialize_from_file_usfm<T: AosjModel>(content: String) -> String {
                                         if !txt.is_empty() {
                                             model.add_string_to_in_para(&mut txt);
                                         }
-                                        in_start_char = true;
                                     }
                                     _ => {
                                         if !t.is_nested {
@@ -354,7 +350,6 @@ pub fn deserialize_from_file_usfm<T: AosjModel>(content: String) -> String {
                                         model.push_element(attributes.clone(), "char".to_string());
                                         model.start_add_char_marker(model.get_attributes());
                                         attributes.clear();
-                                        in_start_char = true;
                                     }
                                 }
                             }
@@ -394,7 +389,6 @@ pub fn deserialize_from_file_usfm<T: AosjModel>(content: String) -> String {
                                         if !txt.is_empty() {
                                             model.end_add_char_marker(&mut txt);
                                         }
-                                        in_start_char = false;
                                         attributes.clear();
                                     }
                                     _ => {

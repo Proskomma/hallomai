@@ -1,7 +1,6 @@
 #![allow(dead_code)]
 
 use serde_json::Value;
-use std::fs::File;
 use std::io::{BufWriter, Write};
 
 pub fn serialize_to_usfm(usj: Value) -> String {

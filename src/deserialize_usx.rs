@@ -2,10 +2,10 @@
 
 use std::collections::BTreeMap;
 use std::fs::File;
-use std::io::{BufReader, Cursor, Seek};
+use std::io::{BufReader, Seek};
 use quick_xml::events::Event;
 use quick_xml::Reader;
-use tempfile::{NamedTempFile, tempfile};
+use tempfile::tempfile;
 use std::io::Write;
 use regex::Regex;
 use crate::model_traits::AosjModel;
@@ -30,7 +30,7 @@ pub fn deserialize_from_file_usx<T:AosjModel>(input_string: String) -> String {
     let mut buf = Vec::new();
     let mut txt = Vec::new();
 
-    let mut values = Regex::new(r#"(["\\])"#).unwrap();
+    let values = Regex::new(r#"(["\\])"#).unwrap();
     let mut model = T::new();
 
     loop {
@@ -117,7 +117,7 @@ pub fn deserialize_from_file_usx<T:AosjModel>(input_string: String) -> String {
             }
 
             Ok(Event::Text(el)) => {
-                let mut value = el.unescape().unwrap().into_owned();
+                let value = el.unescape().unwrap().into_owned();
                 let new_value = values.replace_all(value.as_str(), "\\$1");
                 if model.parent_els().len()>1 {
                     txt.push(new_value.to_string());

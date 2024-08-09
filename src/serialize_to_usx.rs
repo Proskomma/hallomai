@@ -1,6 +1,5 @@
 #![allow(dead_code)]
 
-use std::fs::File;
 use serde_json::Value;
 use quick_xml::events::{Event, BytesEnd, BytesStart, BytesText};
 use quick_xml::writer::Writer;

@@ -196,6 +196,22 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3f9eec918d3f24069decb9af1554cad7c880e2da24a9afd88aca000531ab82c1"
 
 [[package]]
+name = "hallomai"
+version = "0.1.0"
+dependencies = [
+ "quick-xml",
+ "regex",
+ "serde",
+ "serde-xml-rs",
+ "serde_json",
+ "serde_with",
+ "structopt",
+ "tempfile",
+ "wasm-bindgen",
+ "xml_oxide",
+]
+
+[[package]]
 name = "hashbrown"
 version = "0.12.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -401,22 +417,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5e719e8df665df0d1c8fbfd238015744736151d4445ec0836b8e628aae103b77"
 dependencies = [
  "unicode-ident",
-]
-
-[[package]]
-name = "proskomma_2"
-version = "0.1.0"
-dependencies = [
- "quick-xml",
- "regex",
- "serde",
- "serde-xml-rs",
- "serde_json",
- "serde_with",
- "structopt",
- "tempfile",
- "wasm-bindgen",
- "xml_oxide",
 ]
 
 [[package]]

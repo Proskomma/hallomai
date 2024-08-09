@@ -6,7 +6,8 @@
 </head>
 <body>
 <script type="module">
-    import init, { transform } from "./pkg/proskomma_2.js";
+    import init, { transform } from "./pkg/hallomai.js";
+    console.time();
     init().then(() => {
         let str_cl = `\\id SNG EN_ULT en_English_ltr Thu Mar 09 2023 15:52:40 GMT-0600 (Central Standard Time) tc
 \\usfm 3.0
@@ -2791,8 +2792,9 @@
 \\w of|x-occurrence="1" x-occurrences="1"\\w*\\zaln-e\\*
 \\zaln-s |x-strong="H1314" x-lemma="בֶּשֶׂם" x-morph="He,Ncmpa" x-occurrence="1" x-occurrences="1" x-content="בְשָׂמִֽים"\\*\\w spices|x-occurrence="1" x-occurrences="1"\\w*\\zaln-e\\*.`;
         let res = transform(str_cl, "usfm", "usj");
-        console.log(res);
+        // console.log(res);
     });
+    console.timeEnd();
 </script>
 </body>
 </html>

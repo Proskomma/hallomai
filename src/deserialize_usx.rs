@@ -17,19 +17,6 @@ use crate::model_traits::AosjModel;
 /// content and reconstructing it into a model that implements the `AosjModel`
 /// trait. It handles different types of XML events such as start tags, end tags,
 /// empty elements, and text nodes.
-// pub fn deserialize_from_file_path_usx<T:AosjModel>(input_file_path: &str) -> String {
-//     let mut reader = Reader::from_file(input_file_path).expect("Unable to open file");
-//     reader.config_mut().trim_text(true);
-//     deserialize_from_file_usx::<T>(reader)
-// }
-//
-// pub fn deserialize_from_file_str_usx<T:AosjModel>(content: String) -> String {
-//     let mut file = NamedTempFile::new().expect("Failed to create temp file");
-//     write!(file, "{}", content).expect("Failed to write to temp file");
-//     let file_path = file.path().to_str().unwrap();
-//     deserialize_from_file_path_usx::<T>(file_path)
-// }
-
 pub fn deserialize_from_file_usx<T:AosjModel>(input_string: String) -> String {
 
     let mut temp_file = tempfile().expect("Failed to create temp file");

@@ -2791,30 +2791,30 @@
                       \\w mountains|x-occurrence="1" x-occurrences="1"\\w*
                       \\w of|x-occurrence="1" x-occurrences="1"\\w*\\zaln-e\\*
                       \\zaln-s |x-strong="H1314" x-lemma="בֶּשֶׂם" x-morph="He,Ncmpa" x-occurrence="1" x-occurrences="1" x-content="בְשָׂמִֽים"\\*\\w spices|x-occurrence="1" x-occurrences="1"\\w*\\zaln-e\\*.`;
-        console.log("usfm=>usx");
+        console.log("usfm=>usj");
         console.time();
-        let usx = transform(str_cl, "usfm", "usx");
+        let usj = transform(str_cl, "usfm", "usj");
         console.timeEnd();
-        console.log("usx=>usj");
-        console.time();
-        let usj = transform(usx, "usx", "usj");
-        console.timeEnd();
+        // console.log("usx=>usj");
+        // console.time();
+        // let usj = transform(usx, "usx", "usj");
+        // console.timeEnd();
         console.log("usj=>usfm");
         console.time();
         let usfm = transform(usj, "usj", "usfm");
         console.timeEnd();
-        console.log("usfm=>usj");
+        console.log("usfm=>usx");
         console.time();
-        let usj2 = transform(usfm, "usfm", "usj");
+        let usj2 = transform(usfm, "usfm", "usx");
         console.timeEnd();
         console.log("usj=>usx");
         console.time();
         let usx2 = transform(usj, "usj", "usx");
         console.timeEnd();
-        console.log("usx=>usfm");
-        console.time();
-        let usfm2 = transform(usx2, "usx", "usfm");
-        console.timeEnd();
+        // console.log("usx=>usfm");
+        // console.time();
+        // let usfm2 = transform(usx2, "usx", "usfm");
+        // console.timeEnd();
     });
 </script>
 </body>

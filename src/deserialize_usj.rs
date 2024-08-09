@@ -1,9 +1,8 @@
 #![allow(dead_code)]
 
 use std::collections::BTreeMap;
-use std::fs::File;
-use std::io::BufReader;
 use serde_json::Value;
+use regex::Regex;
 use crate::model_traits::AosjModel;
 
 /// # Reads the USJ file and reconstructs it into an AosjModel.
@@ -14,9 +13,11 @@ use crate::model_traits::AosjModel;
 
 fn read_content<T:AosjModel>(model: &mut T, object: &Value) {
     let mut txt: Vec<String> = Vec::new();
+    let mut values = Regex::new(r#"(["\\])"#).unwrap();
     match object {
         Value::String(text) => {
-            txt.push(text.to_string());
+            let new_value = values.replace_all(text.as_str(), "\\$1");
+            txt.push(new_value.to_string());
         }
         Value::Object(obj) => {
             let mut attributes: BTreeMap<String, String> = BTreeMap::new();
@@ -120,16 +121,4 @@ pub fn deserialize_from_file_usj<T:AosjModel>(json: Value) -> String {
         }
     }
     model.assemble_model()
-}
-
-pub fn deserialize_from_file_path_usj<T:AosjModel>(input_file_path: &str) -> String {
-    let file = File::open(input_file_path).expect("Unable to open file");
-    let reader = BufReader::new(file);
-    let json: Value = serde_json::from_reader(reader).expect("Unable to parse JSON");
-    deserialize_from_file_usj::<T>(json)
-}
-
-pub fn deserialize_from_file_str_usj<T:AosjModel>(content: String) -> String {
-    let json: Value = serde_json::from_str(content.as_str()).expect("Unable to parse JSON");
-    deserialize_from_file_usj::<T>(json)
 }

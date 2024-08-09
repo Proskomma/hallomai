@@ -415,6 +415,7 @@ dependencies = [
  "serde_with",
  "structopt",
  "tempfile",
+ "wasm-bindgen",
  "xml_oxide",
 ]
 

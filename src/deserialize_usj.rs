@@ -4,9 +4,6 @@ use std::collections::BTreeMap;
 use std::fs::File;
 use std::io::BufReader;
 use serde_json::Value;
-use tempfile::NamedTempFile;
-use std::io::Write;
-use crate::deserialize_usfm::deserialize_from_file_path_usfm;
 use crate::model_traits::AosjModel;
 
 /// # Reads the USJ file and reconstructs it into an AosjModel.
@@ -133,8 +130,6 @@ pub fn deserialize_from_file_path_usj<T:AosjModel>(input_file_path: &str) -> Str
 }
 
 pub fn deserialize_from_file_str_usj<T:AosjModel>(content: String) -> String {
-    let mut file = NamedTempFile::new().expect("Failed to create temp file");
-    write!(file, "{}", content).expect("Failed to write to temp file");
-    let file_path = file.path().to_str().unwrap();
-    deserialize_from_file_path_usfm::<T>(file_path)
+    let json: Value = serde_json::from_str(content.as_str()).expect("Unable to parse JSON");
+    deserialize_from_file_usj::<T>(json)
 }

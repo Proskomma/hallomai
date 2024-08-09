@@ -2,11 +2,13 @@
 
 use serde_json::Value;
 use std::fs::File;
-use std::io::{BufWriter, Write};
+use std::io::{BufReader, BufWriter, Write};
 
-pub fn serialize_to_usfm(usj: Value, output_file_path: &str) {
-    let file = File::create(output_file_path).expect("Unable to create file");
-    let mut writer = BufWriter::new(file);
+pub fn serialize_to_usfm(usj: Value, output_file_path: &str) -> String {
+    // let file = File::create(output_file_path).expect("Unable to create file");
+    let mut writer: BufWriter<Vec<u8>> = BufWriter::new(Vec::new());
+    let mut writer: BufReader<Vec<u8>> = BufReader::new(Vec::new());
+    // let mut writer = String::new();
 
     if let Some(version) = usj.get("version").and_then(|v| v.as_str()) {
         writeln!(writer, "\\usfm {}", version).unwrap();
@@ -46,10 +48,15 @@ pub fn serialize_to_usfm(usj: Value, output_file_path: &str) {
             }
         }
     }
+    let buffer = writer.into_inner().expect("Failed to retrieve buffer");
+
+    // Convert the Vec<u8> to a String
+    let output_string = String::from_utf8(buffer).expect("Failed to convert buffer to string");
+    output_string
 }
 
 
-fn write_content(content: &Value, writer: &mut BufWriter<File>, in_char: bool) {
+fn write_content(content: &Value, writer: &mut BufWriter<Vec<u8>>, in_char: bool) {
     match content {
         Value::String(text) => {
             write!(writer, "{}", text).unwrap();

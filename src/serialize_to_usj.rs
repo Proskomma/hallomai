@@ -10,9 +10,9 @@ pub fn serialize_to_usj(mut content: String, output_file_path: &str) -> Value {
         map.insert("type".to_string(), Value::String("USJ".to_string()));
     }
     let json_with_sid = add_sid_to_usj(json_value);
-    let formatted_json = to_string_pretty(&json_with_sid).expect("Failed to format JSON");
-    let mut file = File::create(output_file_path).expect("Unable to create file");
-    file.write_all(formatted_json.as_bytes()).expect("Unable to write data");
+    // let formatted_json = to_string_pretty(&json_with_sid).expect("Failed to format JSON");
+    // let mut file = File::create(output_file_path).expect("Unable to create file");
+    // file.write_all(formatted_json.as_bytes()).expect("Unable to write data");
     json_with_sid
 }
 

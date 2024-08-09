@@ -567,3 +567,7 @@ pub fn deserialize_from_file_path_usfm<T:AosjModel>(input_file_path: &str) -> St
     file.read_to_string(&mut content).unwrap();
     deserialize_from_file_usfm::<T>(content)
 }
+
+pub fn deserialize_from_file<T:AosjModel>(content: String) -> String {
+    deserialize_from_file_usfm::<T>(content)
+}

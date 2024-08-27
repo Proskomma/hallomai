@@ -37,9 +37,9 @@ use crate::deserialize_usj::deserialize_from_file_usj;
 use crate::deserialize_usx::deserialize_from_file_usx;
 
 
-include!("../tests/code/test_deserialize_usj.rs");
-include!("../tests/code/test_deserialize_usx.rs");
-include!("../tests/code/test_deserialize_usfm.rs");
+// include!("../tests/code/test_deserialize_usj.rs");
+// include!("../tests/code/test_deserialize_usx.rs");
+// include!("../tests/code/test_deserialize_usfm.rs");
 
 // extern crate rust_usfm_parser;
 

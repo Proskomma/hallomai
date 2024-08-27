@@ -85,11 +85,11 @@ run();
 
 #### From the USFM of the book of "Song of Songs"
 
-![song_of_songs_benchmark](./assets/song_of_songs_benchmarks.png)
+![song_of_songs_benchmark](./assets/song_of_songs_benchmark.png)
 
 #### From the USFM of the book of "Psalms"
 
-![song_of_songs_benchmark](./assets/psalms_benchmarks.png)
+![song_of_songs_benchmark](./assets/psalms_benchmark.png)
 
 ## Building for WebAssembly
 

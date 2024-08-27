@@ -83,10 +83,6 @@ run();
 
 ### Benchmarks in Wasm (in a js code)
 
-#### From the USFM of the book of "Song of Songs"
-
-![song_of_songs_benchmark](./assets/song_of_songs_benchmark.jpg)
-
 #### From the USFM of the book of "Psalms"
 
 ![song_of_songs_benchmark](./assets/psalms_benchmark.jpg)

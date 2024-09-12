@@ -223,7 +223,7 @@ fn make_tag(subclass: &str, matched_bits: Vec<&str>) -> Tag {
     } else {
         // TODO : make sure to handle all the tags in the future
         // tag_type = "para".to_string();
-        panic!("Tag not in the specification : {}", tag_name);
+        //panic!("Tag not in the specification : {}", tag_name);
     }
 
     Tag {

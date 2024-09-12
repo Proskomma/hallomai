@@ -20,19 +20,24 @@ mod aosj_string;
 mod structs_model;
 use aosj_string::aosj_string_model::AosjStringModel;
 
+
 mod deserialize_usx;
 mod deserialize_usj;
 mod deserialize_usfm;
+mod deserialize_e_bible;
 mod reg_ex_tests;
 mod utils_usfm;
 mod aosj_enum_model;
 mod serialize_to_usj;
 mod serialize_to_usx;
 mod serialize_to_usfm;
+mod serialize_to_e_bible;
+
 
 use crate::deserialize_usfm::deserialize_from_file_usfm;
 use crate::deserialize_usj::deserialize_from_file_usj;
 use crate::deserialize_usx::deserialize_from_file_usx;
+use crate::deserialize_e_bible::deserialize_from_file_e_bible;
 // use crate::model_traits::AosjModel;
 
 // include!("../tests/code/test_deserialize_usj.rs");
@@ -68,14 +73,15 @@ use crate::deserialize_usx::deserialize_from_file_usx;
 /// If an unsupported output file format is provided, the function will return an error message.
 #[wasm_bindgen]
 pub fn transform(input_file_content: String, input_file_format: String, output_file_format: String) -> String {
-    let model = match input_file_format.as_str() {
+    let model = match input_file_format.to_lowercase().as_str() {
         "usx" => deserialize_from_file_usx::<AosjStringModel>(input_file_content),
         "usfm" => deserialize_from_file_usfm::<AosjStringModel>(input_file_content),
         "json" | "usj" => deserialize_from_file_usj::<AosjStringModel>(serde_json::from_str(&input_file_content).unwrap()),
-        _ => return "Unsupported input file format. Only 'usfm', 'usx', and 'json' are supported.".to_string(),
+        "ebible" => deserialize_from_file_e_bible::<AosjStringModel>(serde_json::from_str(&input_file_content).unwrap()),
+        _ => return "Unsupported input file format. Only 'usfm', 'usx', 'json' and ebible are supported.".to_string(),
     };
 
-    match output_file_format.as_str() {
+    match output_file_format.to_lowercase().as_str() {
         "json" | "usj" => serialize_to_usj::serialize_to_usj(model).to_string(),
         "usfm" => {
             let usj = serialize_to_usj::serialize_to_usj(model);
@@ -85,7 +91,11 @@ pub fn transform(input_file_content: String, input_file_format: String, output_f
             let usj = serialize_to_usj::serialize_to_usj(model);
             serialize_to_usx::serialize_to_usx(usj)
         }
-        _ => "Unsupported output file format. Only 'usfm', 'usx', and 'json' are supported.".to_string(),
+        "ebible" => {
+            let usj = serialize_to_usj::serialize_to_usj(model);
+            serialize_to_e_bible::serialize_to_e_bible(usj)
+        }
+        _ => "Unsupported output file format. Only 'usfm', 'usx', 'json' and 'ebible' are supported.".to_string(),
     }
 }
 
@@ -132,6 +142,13 @@ mod tests {
     fn test_transform_usfm_to_usfm() {
         let output = transform(USFM_CONTENT.to_string(), "usfm".to_string(), "usfm".to_string());
         assert_eq!(output, USFM_CONTENT);
+    }
+
+    #[test]
+    fn test_transform_usfm_to_ebible() {
+        let output = transform(USFM_CONTENT.to_string(), "usfm".to_string(), "ebible".to_string());
+        assert!(output.contains("\"usfm\":"));
+        assert!(output.contains("\"toc1\": \"The Book of Psalms\""));
     }
 
     #[test]

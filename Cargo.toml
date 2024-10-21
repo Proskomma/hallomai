@@ -3,7 +3,7 @@ name = "hallomai"
 version = "0.1.1"
 edition = "2021"
 description = "A rust converter USFM<->USJ<->USX"
-license = "CC BY-NC"
+license = "MIT"
 
 [lib]
 crate-type = ["cdylib"]
